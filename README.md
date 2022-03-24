@@ -1,9 +1,9 @@
 #Features
 
-Base UI components for publisher and brands
-Allow digital assets to be minted by advertisers
-Allow brands to pay based on Ad placement
-Track Ad impressions on-chain
+Base UI components for publisher and brands\
+Allow digital assets to be minted by advertisers\
+Allow brands to pay based on Ad placement\
+Track Ad impressions on-chain\
 
 ---
 
