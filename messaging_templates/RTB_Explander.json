@@ -1,0 +1,137 @@
+{
+  "id": "e97941e1-2530-4110-92e8-84f416c174f9",
+  "at": 2,
+  "cur": ["USD"],
+  "imp": [
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game1.com", "game2.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    },
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game1.com", "game3.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    },
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game3.com", "game4.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    },
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game2.com", "game4.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    },
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game1.com", "game4.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    },
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game2.com", "game3.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    },
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "iframebuster": ["game1.com"],
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0,
+        "battr": [13],
+        "expdir": [2, 4]
+      }
+    }
+  ],
+  "site": {
+    "id": "0b6d3a78-c562-11ec-9d64-0242ac120002",
+    "cat": ["IAB3-1"],
+    "domain": "www.footballer.com",
+    "page": "http://www.footballer.com/1234.html",
+    "origin domain": "locify.com",
+    "showRule": "always",
+    "endDate": 2524730400,
+    "startDate": 0,
+    "template": "callback",
+    "publisher": {
+      "id": "8953",
+      "name": "footballer.com",
+      "cat": ["IAB3-1"],
+      "domain": "footballer.com"
+    }
+  },
+  "device": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13 (KHTML, like Gecko) Version / 5.1 .7 Safari / 534.57 .2 ",
+    "ip": "123.145.167.10"
+  },
+  "user": {
+    "id": "55816b39711f9b5acf3b90e313ed29e51665623f",
+    "buyeruid": "545678765467876567898765678987654",
+    "data": [
+      {
+        "id": "6",
+        "name": "Data Provider 1",
+        "segment": [
+          {
+            "id": "12341318394918",
+            "name": "auto intenders"
+          },
+          {
+            "id": "1234131839491234",
+            "name": "auto enthusiasts"
+          },
+          {
+            "id": "23423424",
+            "name": "data-provider1-age",
+            "value": "30-40"
+          }
+        ]
+      }
+    ]
+  }
+}
