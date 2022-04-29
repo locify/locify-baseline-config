@@ -1,0 +1,107 @@
+{
+  "id": "e97941e1-2530-4110-92e8-84f416c174f9",
+  "at": 1,
+  "cur": ["USD", "EUR"],
+  "imp": [
+    {
+      "id": "1",
+      "bidfloor": 0.03,
+      "banner": {
+        "h": 300,
+        "w": 400,
+        "pos": 0
+      }
+    },
+    {
+      "id": "2",
+      "bidfloor": 0.13,
+      "banner": {
+        "h": 600,
+        "w": 400,
+        "pos": 0
+      }
+    },
+    {
+      "id": "3",
+      "bidfloor": 0.05,
+      "banner": {
+        "h": 500,
+        "w": 500,
+        "pos": 0
+      }
+    },
+    {
+      "id": "4",
+      "bidfloor": 0.25,
+      "banner": {
+        "h": 1000,
+        "w": 800,
+        "pos": 0
+      }
+    },
+    {
+      "id": "5",
+      "bidfloor": 0.15,
+      "banner": {
+        "h": 800,
+        "w": 600,
+        "pos": 0
+      }
+    },
+    {
+      "id": "5",
+      "bidfloor": 0.15,
+      "banner": {
+        "h": 800,
+        "w": 600,
+        "pos": 0
+      }
+    },
+    {
+      "id": "6",
+      "bidfloor": 0.12,
+      "banner": {
+        "h": 600,
+        "w": 400,
+        "pos": 0
+      }
+    },
+    {
+      "id": "7",
+      "bidfloor": 0.3,
+      "banner": {
+        "h": 1500,
+        "w": 1000,
+        "pos": 0
+      }
+    },
+    {
+      "id": "8",
+      "bidfloor": 0.03,
+      "banner": {
+        "h": 200,
+        "w": 200,
+        "pos": 0
+      }
+    }
+  ],
+  "site": {
+    "id": "0b6d3a78-c562-11ec-9d64-0242ac120002",
+    "cat": ["IAB3-1"],
+    "domain": "www.unityengine.com",
+    "page": "http://www.locify.com/index.html ",
+    "publisher": {
+      "id": "8953",
+      "name": "locify.com",
+      "cat": ["IAB3-1"],
+      "domain": "locify.com"
+    }
+  },
+  "device": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13 (KHTML, like Gecko) Version / 5.1 .7 Safari / 534.57 .2 ",
+    "ip": "123.145.167.10"
+  },
+  "user": {
+    "id": "55816b39711f9b5acf3b90e313ed29e51665623f"
+  }
+}
