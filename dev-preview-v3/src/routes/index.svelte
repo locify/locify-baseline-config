@@ -4,20 +4,41 @@
   import NavBar from "$components/NavBar.svelte";
   import ItemKeys from "$components/ItemKeys.svelte";
   import ModelForm from "$components/ModelForm.svelte";
+  import {random} from "$utils/utils";
 
   type ConnectionState = 'init' | 'disconnected' | 'connected'
+  type AttributesT = {
+    in_game_ad_clicks: number
+    google_links: number
+    pop_up_ads: number
+    video_ads: number
+    banner_ads: number
+  }
+  type CombinationsT = {
+    c123: number
+    c234: number
+    c345: number
+  }
   let isConnected: ConnectionState = 'init'
 
-  const random = (min, max) => Math.floor(Math.random() * (max - min)) + min;
-
+  const minVal = 8000
+  const maxVal = 20000
   let allKeys = "not set"
   let item_id = "not set"
-  let model = "Last Interaction"
-  let in_game_ad_clicks = 0
-  let google_links = 0
-  let pop_up_ads = 0
-  let video_ads = 0
-  let banner_ads = 0
+  let model = "First Interaction"
+  let fi_in_game_ad_clicks = random(minVal, maxVal)
+  let fi_google_links = random(minVal, maxVal)
+  let fi_pop_up_ads = random(minVal, maxVal)
+  let fi_video_ads = random(minVal, maxVal)
+  let fi_banner_ads = random(minVal, maxVal)
+  let li_in_game_ad_clicks = random(minVal, maxVal)
+  let li_google_links = random(minVal, maxVal)
+  let li_pop_up_ads = random(minVal, maxVal)
+  let li_video_ads = random(minVal, maxVal)
+  let li_banner_ads = random(minVal, maxVal)
+  let c123 = random(minVal, maxVal)
+  let c234 = random(minVal, maxVal)
+  let c345 = random(minVal, maxVal)
 
   let nearApi!: NearApi
   onMount(async () => {
@@ -47,11 +68,19 @@
   }
 
   const randomFill = () => {
-    in_game_ad_clicks = random(8000, 20000)
-    google_links = random(8000, 20000)
-    pop_up_ads = random(8000, 20000)
-    video_ads = random(8000, 20000)
-    banner_ads = random(8000, 20000)
+    fi_in_game_ad_clicks = random(minVal, maxVal)
+    fi_google_links = random(minVal, maxVal)
+    fi_pop_up_ads = random(minVal, maxVal)
+    fi_video_ads = random(minVal, maxVal)
+    fi_banner_ads = random(minVal, maxVal)
+    li_in_game_ad_clicks = random(minVal, maxVal)
+    li_google_links = random(minVal, maxVal)
+    li_pop_up_ads = random(minVal, maxVal)
+    li_video_ads = random(minVal, maxVal)
+    li_banner_ads = random(minVal, maxVal)
+    c123 = random(minVal, maxVal)
+    c234 = random(minVal, maxVal)
+    c345 = random(minVal, maxVal)
   }
 
   const getAllKeys = async () => {
@@ -68,30 +97,42 @@
     if (res !== 'not found') {
       const val = JSON.parse(res) as {
         item_id: string,
-        model: string,
-        in_game_ad_clicks: number,
-        google_links: number,
-        pop_up_ads: number,
-        video_ads: number,
-        banner_ads: number
+        first_interaction: AttributesT,
+        last_interaction: AttributesT,
+        shapley_value: CombinationsT
       }
       item_id = val.item_id
-      model = val.model
-      in_game_ad_clicks = val.in_game_ad_clicks
-      google_links = val.google_links
-      pop_up_ads = val.pop_up_ads
-      video_ads = val.video_ads
-      banner_ads = val.banner_ads
+      fi_in_game_ad_clicks = val.first_interaction.in_game_ad_clicks
+      fi_google_links = val.first_interaction.google_links
+      fi_pop_up_ads = val.first_interaction.pop_up_ads
+      fi_video_ads = val.first_interaction.video_ads
+      fi_banner_ads = val.first_interaction.banner_ads
+      li_in_game_ad_clicks = val.last_interaction.in_game_ad_clicks
+      li_google_links = val.last_interaction.google_links
+      li_pop_up_ads = val.last_interaction.pop_up_ads
+      li_video_ads = val.last_interaction.video_ads
+      li_banner_ads = val.last_interaction.banner_ads
+      c123 = val.shapley_value.c123
+      c234 = val.shapley_value.c234
+      c345 = val.shapley_value.c345
     }
   }
   const addItem = async () => {
-    await nearApi.addItem(item_id,
-      model,
-      in_game_ad_clicks,
-      google_links,
-      pop_up_ads,
-      video_ads,
-      banner_ads
+    await nearApi.addItem(
+      item_id,
+      fi_in_game_ad_clicks,
+      fi_google_links,
+      fi_pop_up_ads,
+      fi_video_ads,
+      fi_banner_ads,
+      li_in_game_ad_clicks,
+      li_google_links,
+      li_pop_up_ads,
+      li_video_ads,
+      li_banner_ads,
+      c123,
+      c234,
+      c345,
     )
   }
 
@@ -102,13 +143,20 @@
 <ItemKeys isConnected={isConnected} allKeys="{allKeys}" getAllKeys="{getAllKeys}"/>
 <ModelForm
   isConnected="{isConnected}"
-  bind:item_id={item_id}
-  bind:model="{model}"
-  bind:in_game_ad_clicks={in_game_ad_clicks}
-  bind:google_links={google_links}
-  bind:pop_up_ads={pop_up_ads}
-  bind:video_ads={video_ads}
-  bind:banner_ads={banner_ads}
+  bind:item_id="{item_id}"
+  bind:fi_in_game_ad_clicks={fi_in_game_ad_clicks}
+  bind:fi_google_links={fi_google_links}
+  bind:fi_pop_up_ads={fi_pop_up_ads}
+  bind:fi_video_ads={fi_video_ads}
+  bind:fi_banner_ads={fi_banner_ads}
+  bind:li_in_game_ad_clicks={li_in_game_ad_clicks}
+  bind:li_google_links={li_google_links}
+  bind:li_pop_up_ads={li_pop_up_ads}
+  bind:li_video_ads={li_video_ads}
+  bind:li_banner_ads={li_banner_ads}
+  bind:c123={c123}
+  bind:c234={c234}
+  bind:c345={c345}
   randomFill={randomFill}
   getItem={getItem}
   addItem={addItem}

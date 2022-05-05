@@ -3,21 +3,28 @@
 
   export let isConnected
   export let item_id
-  export let model
-  export let in_game_ad_clicks
-  export let google_links
-  export let pop_up_ads
-  export let video_ads
-  export let banner_ads
+  export let fi_in_game_ad_clicks
+  export let fi_google_links
+  export let fi_pop_up_ads
+  export let fi_video_ads
+  export let fi_banner_ads
+  export let li_in_game_ad_clicks
+  export let li_google_links
+  export let li_pop_up_ads
+  export let li_video_ads
+  export let li_banner_ads
+  export let c123
+  export let c234
+  export let c345
   export let randomFill
   export let getItem
   export let addItem
-  let selected
   let modelOptions = [
+    {id: 0, text: "First Interaction"},
     {id: 1, text: "Last Interaction"},
-    {id: 2, text: "First Interaction"},
-    {id: 3, text: "Game theory based model"},
+    {id: 2, text: "Shapley Value"},
   ]
+  let selected = modelOptions[0]
 </script>
 {#if isConnected === 'connected'}
   <div class="py-12">
@@ -29,19 +36,40 @@
         <Attribute attrId='item_id' attrType='text' bind:value={item_id}/>
         <label class="block">
           <span class="text-gray-700">Choose a model:</span>
-          <select class="form-select block w-full mt-1" bind:value={selected} on:change="{() => model = ''}">
-            {#each modelOptions as model}
+          <select class="form-select block w-full mt-1" bind:value={selected}>
+            <option value={modelOptions[0]}>
+              {modelOptions[0].text}
+            </option>
+            <option value={modelOptions[1]}>
+              {modelOptions[1].text}
+            </option>
+            <option value={modelOptions[2]}>
+              {modelOptions[2].text}
+            </option>
+            <!--{#each modelOptions as model}
               <option value={model}>
                 {model.text}
               </option>
-            {/each}
+            {/each}-->
           </select>
         </label>
-        <Attribute attrId='In Game Ad Click' attrType='number' bind:value={in_game_ad_clicks}/>
-        <Attribute attrId='Google Links' attrType='number' bind:value={google_links}/>
-        <Attribute attrId='Pop-Up Ads ' attrType='number' bind:value={pop_up_ads}/>
-        <Attribute attrId='Video Ads' attrType='number' bind:value={video_ads}/>
-        <Attribute attrId='Banner Ads' attrType='number' bind:value={banner_ads}/>
+        {#if selected.id === 0}
+          <Attribute attrId='In Game Ad Click' attrType='number' bind:value={fi_in_game_ad_clicks}/>
+          <Attribute attrId='Google Links' attrType='number' bind:value={fi_google_links}/>
+          <Attribute attrId='Pop-Up Ads ' attrType='number' bind:value={fi_pop_up_ads}/>
+          <Attribute attrId='Video Ads' attrType='number' bind:value={fi_video_ads}/>
+          <Attribute attrId='Banner Ads' attrType='number' bind:value={fi_banner_ads}/>
+        {:else if selected.id === 1}
+          <Attribute attrId='In Game Ad Click' attrType='number' bind:value={li_in_game_ad_clicks}/>
+          <Attribute attrId='Google Links' attrType='number' bind:value={li_google_links}/>
+          <Attribute attrId='Pop-Up Ads ' attrType='number' bind:value={li_pop_up_ads}/>
+          <Attribute attrId='Video Ads' attrType='number' bind:value={li_video_ads}/>
+          <Attribute attrId='Banner Ads' attrType='number' bind:value={li_banner_ads}/>
+        {:else}
+          <Attribute attrId='In Game Ad Click - Google Links - Pop-Up Ads' attrType='number' bind:value={c123}/>
+          <Attribute attrId='Google Links - Pop-Up Ads - Video Ads' attrType='number' bind:value={c234}/>
+          <Attribute attrId='Pop-Up Ads - Video Ads - Banner Ads' attrType='number' bind:value={c345}/>
+        {/if}
       </div>
       <div class="py-4 px-2 flex flex-row justify-between">
         <button class="btn-primary" on:click={getItem}>Get item</button>

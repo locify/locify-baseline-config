@@ -12,8 +12,7 @@
         type="text"
         class="form-input mt-1 block w-full"
         placeholder="insert value"
-        value={value}
-        on:keyup={e => value = e.target.value}
+        bind:value={value}
       />
     </label>
   {:else}
@@ -24,9 +23,8 @@
         type="number"
         class="form-input mt-1 block w-full"
         placeholder="insert value"
-        value={value}
+        bind:value={value}
         min=1000 max=20000
-        on:keyup={e => value = e.target.value}
       />
     </label>
   {/if}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import logo from '$assets/images/logo-locify_text.png'
+  import logo from '$assets/images/logo-locify_black.png'
 
   export let isConnected
   export let getAccountName
@@ -7,7 +7,7 @@
   export let walletConnect
 </script>
 <nav class="bg-white border-gray-200 px-2 py-2.5 rounded flex flex-row justify-between items-center">
-  <img src={logo} class="object-contain h-18 w-24" alt="Locify Logo"/>
+  <img src={logo} class="object-contain h-14" alt="Locify Logo"/>
   {#if isConnected !== 'init'}
     {#if (isConnected === 'connected')}
       <div class="has-tooltip flex flex-col">

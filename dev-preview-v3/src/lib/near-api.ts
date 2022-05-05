@@ -16,27 +16,19 @@ class ArgsGet {
 
 class ArgsAdd {
     item_id: string
-    model: string
-    in_game_ad_clicks: number
-    google_links: number
-    pop_up_ads: number
-    video_ads: number
-    banner_ads: number
+    first_interaction: string
+    last_interaction: string
+    shapley_value: string
 
     public constructor(item_id: string,
-                       model: string,
-                       in_game_ad_clicks: number,
-                       google_links: number,
-                       pop_up_ads: number,
-                       video_ads: number,
-                       banner_ads: number) {
+                       first_interaction: string,
+                       last_interaction: string,
+                       shapley_value: string,
+    ) {
         this.item_id = item_id
-        this.model = model
-        this.in_game_ad_clicks = in_game_ad_clicks
-        this.google_links = google_links
-        this.pop_up_ads = pop_up_ads
-        this.video_ads = video_ads
-        this.banner_ads = banner_ads
+        this.first_interaction = first_interaction
+        this.last_interaction = last_interaction
+        this.shapley_value = shapley_value
     }
 }
 
@@ -76,7 +68,7 @@ export default class NearApi {
         const wallet = new nearApi.WalletConnection(near) as WalletConnection
         const contract: OracleContractT = new nearApi.Contract(
             wallet.account(),
-            "advo2.liv1.testnet",
+            "advo3.liv1.testnet",
             {
                 viewMethods: ["get_item", "all_keys"],
                 changeMethods: ["add_item"],
@@ -91,7 +83,7 @@ export default class NearApi {
     }
 
     async walletConnect(): Promise<void> {
-        await this.wallet?.requestSignIn({contractId: "advo2.liv1.testnet"}, 'oracle for Near protocol')
+        await this.wallet?.requestSignIn({contractId: "advo3.liv1.testnet"}, 'oracle for Near protocol')
     }
 
     walletDisconnect() {
@@ -110,29 +102,50 @@ export default class NearApi {
         return await this.contract?.all_keys()
     }
 
-    async addItem(item_id: string,
-                  model: string,
-                  in_game_ad_clicks: number,
-                  google_links: number,
-                  pop_up_ads: number,
-                  video_ads: number,
-                  banner_ads: number
+    async addItem(
+        item_id: string,
+        fi_in_game_ad_clicks: number,
+        fi_google_links: number,
+        fi_pop_up_ads: number,
+        fi_video_ads: number,
+        fi_banner_ads: number,
+        li_in_game_ad_clicks: number,
+        li_google_links: number,
+        li_pop_up_ads: number,
+        li_video_ads: number,
+        li_banner_ads: number,
+        c123: number,
+        c234: number,
+        c345: number,
     ): Promise<void> {
+        const first_interaction = JSON.stringify({
+            in_game_ad_clicks: fi_in_game_ad_clicks,
+            google_links: fi_google_links,
+            pop_up_ads: fi_pop_up_ads,
+            video_ads: fi_video_ads,
+            banner_ads: fi_banner_ads
+        })
+        const last_interaction = JSON.stringify({
+            in_game_ad_clicks: li_in_game_ad_clicks,
+            google_links: li_google_links,
+            pop_up_ads: li_pop_up_ads,
+            video_ads: li_video_ads,
+            banner_ads: li_banner_ads
+        })
+        const shapley_value = JSON.stringify({
+            c123,
+            c234,
+            c345
+        })
         console.log(`add item: ${item_id} 
-        ${model} 
-        ${in_game_ad_clicks} 
-        ${google_links} 
-        ${pop_up_ads} 
-        ${video_ads} 
-        ${banner_ads}`)
+        ${first_interaction} 
+        ${last_interaction} 
+        ${shapley_value}`)
         return await this.contract?.add_item({
             item_id,
-            model,
-            in_game_ad_clicks,
-            google_links,
-            pop_up_ads,
-            video_ads,
-            banner_ads
+            first_interaction,
+            last_interaction,
+            shapley_value
         })
     }
 }
