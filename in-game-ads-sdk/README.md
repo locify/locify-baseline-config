@@ -1,8 +1,5 @@
-# 🏎️ @pmndrs/racing-game
-
 ![img](thumbnail.webp)
 
-Live demo (current state): https://racing.pmnd.rs/
 
 This project is a showcase for the feasibility of React in gaming. Every thing is a self contained component using [react-three-fiber](https://docs.pmnd.rs/react-three-fiber) to express threejs with React semantics. If that seems strange to you read [this explanation](https://twitter.com/0xca0a/status/1282999626782650368).
 
