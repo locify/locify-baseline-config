@@ -50,7 +50,10 @@ test.afterEach(async (t) => {
 
 test("add player", async (t) => {
     const {root, contract, alice, bob, charlie} = t.context.accounts;
-    let playerId: string = await alice.call(contract, "player_add", {account_id: "alice.testnet"});
+    let playerId: string = await alice.call(contract, "player_add", {
+        account_id: "alice.testnet",
+        player_type: 'Publisher'
+    });
     const playerState: Player = await contract.view("get_player", {player_id: playerId});
     let players: Array<Player> = await root.call(contract, "get_players", {});
     t.is(playerId, playerState.id);
@@ -58,8 +61,11 @@ test("add player", async (t) => {
 });
 test("activate player", async (t) => {
     const {root, contract, alice, bob, charlie} = t.context.accounts;
-    let playerId: string = await alice.call(contract, "player_add", {account_id: "alice.testnet"});
-    await contract.call(contract, "player_activate", {player_id: playerId});
+    let playerId: string = await alice.call(contract, "player_add", {
+        account_id: "alice.testnet",
+        "player_type": "Publisher"
+    });
+    await root.call(contract, "player_activate", {player_id: playerId});
     const playerState: Player = await contract.view("get_player", {player_id: playerId});
     t.is('Active', playerState.status);
 });

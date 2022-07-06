@@ -1,16 +1,21 @@
 use serde_json::json;
 use serde::{Deserialize, Serialize};
-use serde_json::Result;
 use workspaces::prelude::*;
 use workspaces::{network::Sandbox, Account, AccountId, Contract, Worker};
 use near_sdk::{Balance, bs58, env};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_units::{parse_gas, parse_near};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
 pub enum PlayerStatus {
     Active,
     Disabled,
+}
+
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
+pub enum PlayerType {
+    Advertiser,
+    Publisher,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -27,6 +32,7 @@ impl Player {
             id: bs58::encode(env::sha256(&env::random_seed())).into_string(),
             linked_account,
             status: PlayerStatus::Disabled,
+
             balance: 0,
         }
     }
@@ -80,7 +86,7 @@ async fn test_player_add(
 ) -> anyhow::Result<()> {
     let player_id: String = user
         .call(&worker, contract.id(), "player_add")
-        .args_json(json!({ "account_id": "alice.testnet" }))?
+        .args_json(json!({ "account_id": "alice.testnet", "player_type": "Publisher" }))?
         .transact()
         .await?
         .json()?;
