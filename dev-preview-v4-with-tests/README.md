@@ -7,6 +7,8 @@ yarn install
 ```
 
 ### Testing
+To test run:
 ```
-yarn 
+yarn run test:integration
+
 ```
