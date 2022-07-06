@@ -8,6 +8,7 @@ use std::str::FromStr;
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, UnorderedMap, Vector};
 use near_sdk::{AccountId, bs58, env, near_bindgen, PanicOnDefault, serde_json, Timestamp};
+use serde_json::json;
 use crate::auction::Auction;
 use crate::dto::bid_request::BidRequest;
 use crate::dto::bid_response::BidResponse;
@@ -57,24 +58,35 @@ impl Contract {
         });
     }
 
-    pub fn player_add(&mut self, account_id: AccountId) {
+    pub fn player_add(&mut self, account_id: AccountId) -> PlayerId {
         // TODO: check player existing
+        env::log_str("add player");
         let player = Player::new(account_id);
         self.players.insert(&player.id, &player);
+        player.id
     }
-    pub fn player_activate(&mut self, player_id: PlayerId) {
+    pub fn player_activate(&mut self, player_id: PlayerId) -> String {
         if let Some(update_player) = self.players.get(&player_id) {
             self.players.insert(&player_id, &update_player.activate());
         }
+        r#"{"status":"success"}"#.to_string()
     }
-    pub fn player_disable(&mut self, player_id: PlayerId) {
+    pub fn player_disable(&mut self, player_id: PlayerId) -> String {
         if let Some(update_player) = self.players.get(&player_id) {
             self.players.insert(&player_id, &update_player.disable());
         }
+        r#"{"status":"success"}"#.to_string()
     }
 
     pub fn get_players(&self) -> Vec<Player> {
         self.players.values().collect()
+    }
+
+    pub fn get_player(&self, player_id: PlayerId) -> Option<Player> {
+        if let Some(player) = self.players.get(&player_id) {
+            return Some(player);
+        }
+        None
     }
 }
 
