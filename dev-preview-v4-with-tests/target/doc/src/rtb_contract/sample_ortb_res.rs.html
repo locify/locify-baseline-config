@@ -1,0 +1,432 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/sample_ortb_res.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>sample_ortb_res.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Regular.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../FiraSans-Medium.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Regular.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceSerif4-Bold.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../SourceCodePro-Semibold.ttf.woff2"><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled><link rel="stylesheet" type="text/css" href="../../dark.css" disabled><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><script defer src="../../main.js"></script><script defer src="../../source-script.js"></script><script defer src="../../source-files.js"></script>
+    <noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button><a class="sidebar-logo" href="../../rtb_contract/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a><h2 class="location"></h2>
+    </nav>
+    <nav class="sidebar"><a class="sidebar-logo" href="../../rtb_contract/index.html"><div class="logo-container"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></div>
+        </a></nav><main><div class="width-limiter"><div class="sub-container"><a class="sub-logo-container" href="../../rtb_contract/index.html"><img class="rust-logo" src="../../rust-logo.svg" alt="logo"></a><nav class="sub"><div class="theme-picker hidden"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="22" height="22" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><form class="search-form"><div class="search-container"><span></span><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../wheel.svg"></a></div></form></nav></div><section id="main-content" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">1</span>
+<span id="2">2</span>
+<span id="3">3</span>
+<span id="4">4</span>
+<span id="5">5</span>
+<span id="6">6</span>
+<span id="7">7</span>
+<span id="8">8</span>
+<span id="9">9</span>
+<span id="10">10</span>
+<span id="11">11</span>
+<span id="12">12</span>
+<span id="13">13</span>
+<span id="14">14</span>
+<span id="15">15</span>
+<span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
+<span id="20">20</span>
+<span id="21">21</span>
+<span id="22">22</span>
+<span id="23">23</span>
+<span id="24">24</span>
+<span id="25">25</span>
+<span id="26">26</span>
+<span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
+<span id="97">97</span>
+<span id="98">98</span>
+<span id="99">99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+</pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">const</span> <span class="ident">INSTREAM_PRE_ROLL</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;id&quot;: &quot;vast-response-from-msan&quot;,
+  &quot;seatbid&quot;: [
+    {
+      &quot;seat&quot;: &quot;vast_seat1&quot;,
+      &quot;bid&quot;: [
+        {
+          &quot;impid&quot;: &quot;1&quot;,
+          &quot;price&quot;: 9.051027,
+          &quot;id&quot;: &quot;vast_seat1-bid1-from-msan&quot;,
+          &quot;adm&quot;: &quot;&amp;lt;VAST version=\&quot;2.0\&quot;&gt;&amp;lt;Ad id=\&quot;preroll-1\&quot;&gt;&amp;lt;InLine&gt;&amp;lt;AdSystem&gt;2.0&amp;lt;/AdSystem&gt;&amp;lt;AdTitle&gt;5773100&amp;lt;/AdTitle&gt;&amp;lt;Creatives&gt;&amp;lt;Creative&gt;&amp;lt;Linear&gt;&amp;lt;Duration&gt;00:00:15&amp;lt;/Duration&gt;&amp;lt;MediaFiles&gt;&amp;lt;MediaFile height=\&quot;360\&quot; width=\&quot;640\&quot; type=\&quot;video/mp4\&quot; delivery=\&quot;streaming\&quot;&gt;http://ndtrs.net/videos/video.mp4&amp;lt;/MediaFile&gt;&lt;/MediaFiles&gt;&amp;lt;/Linear&gt;&lt;/Creative&gt;&amp;lt;Creative&gt;&amp;lt;CompanionAds&gt;&amp;lt;Companion height=\&quot;250\&quot; width=\&quot;300\&quot; id=\&quot;573242\&quot;&gt;&amp;lt;HTMLResource&gt;&amp;lt;![CDATA[&amp;lt;A href=\&quot;http://ndtrs.net/beacon\&quot; target=\&quot;_blank\&quot;&gt;&amp;lt;IMG SRC=\&quot;http://ndtrs.net/images/image.png\&quot; ALT=\&quot;Click Here\&quot; /&gt;&amp;lt;/A&gt;&amp;lt;img src=\&quot;http://ndtrs.net/images/image.png\&quot; height=\&quot;1\&quot; width=\&quot;1\&quot; /&gt;]]&gt;&amp;lt;/HTMLResource&gt;&amp;lt;/Companion&gt;&amp;lt;/CompanionAds&gt;&amp;lt;/Creative&gt;&amp;lt;/Creatives&gt;&amp;lt;/InLine&gt;&amp;lt;/Ad&gt;&amp;lt;/VAST&gt;&quot;,
+          &quot;adomain&quot;: [
+            &quot;example.com&quot;
+          ],
+          &quot;crid&quot;: &quot;16969426&quot;,
+          &quot;cid&quot;: &quot;2445&quot;,
+          &quot;iurl&quot;: &quot;http://ndtrs.net/images/image.png&quot;,
+          &quot;burl&quot;:&quot;http://us-east-user.demo.net/bill_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;amp;p=${AUCTION_PRICE}&amp;amp;aid=&quot;,
+          &quot;lurl&quot;:&quot;http://us-east-user.demo.net/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+          &quot;nurl&quot;: &quot;http://ndtrs.net/winnotice/win?case=rtbVastResponse&quot;
+        }
+      ]
+    }
+  ]
+}&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">DISPLAY</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;seatbid&quot;:[{
+    &quot;seat&quot;: &quot;1234&quot;,
+    &quot;bid&quot;:[{
+      &quot;nurl&quot;:&quot;http:\/\/reports.demo.com\/fb?b=JdZQFdbCARgKMURHWGhvUVl0bSMBJeAhAA&amp;amp;c=MTo6&amp;amp;wp=${AUCTION_PRICE}&quot;,
+      &quot;burl&quot;:&quot;http:\/\/reports.ubimo.com\/burl?K=JdZQFdbCARgKMURHWGhvUVl0bSMBJeAhAA&amp;amp;c=MTo6&amp;amp;wp=${AUCTION_PRICE}&quot;,
+      &quot;lurl&quot;:&quot;http:\/\/reports.ubimo.com\/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+      &quot;adomain&quot;:[&quot;example.com&quot;],
+      &quot;price&quot;:5.5,
+      &quot;id&quot;:&quot;1FGYhoQYtm&quot;,
+      &quot;adm&quot;: &quot;&amp;lt;ad xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xsi:noNamespaceSchemaLocation=\&quot;smaato_ad_v0.9.xsd\&quot; modelVersion=\&quot;0.9\&quot;&gt;&amp;lt;imageAd&gt;&amp;lt;imgUrl&gt;https://simage.png&amp;lt;/imgUrl&gt;&amp;lt;clickUrl&gt;http://click&amp;lt;/clickUrl&gt;&amp;lt;width&gt;320&amp;lt;/width&gt;&amp;lt;height&gt;50&amp;lt;/height&gt;&amp;lt;/imageAd&gt;&amp;lt;/ad&gt;&quot;,
+      &quot;impid&quot;:&quot;1&quot;,
+      &quot;cid&quot;:&quot;1234&quot;,
+      &quot;crid&quot;:&quot;1234&quot;
+    }]
+  }],
+  &quot;id&quot;:&quot;1FGYhoQYtm&quot;
+}
+&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NATIVE_1_1</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;id&quot;: &quot;general-dsp&quot;,
+  &quot;bidid&quot;: &quot;general-dps-bid-id&quot;,
+  &quot;seatbid&quot;: [
+    {
+      &quot;seat&quot;: &quot;general-dsp-seat1&quot;,
+      &quot;bid&quot;: [
+        {
+          &quot;impid&quot;: &quot;1&quot;,
+          &quot;price&quot;: 1,
+          &quot;id&quot;: &quot;general-dsp-native-ad&quot;,
+          &quot;adm&quot;: &quot;{\&quot;native\&quot; :{\&quot;link\&quot;:{\&quot;url\&quot;:\&quot;http://i.am.a/URL\&quot;},\&quot;assets\&quot;:[{\&quot;id\&quot;:$TITLE_IDS,\&quot;required\&quot;:1,\&quot;title\&quot;:{\&quot;text\&quot;:\&quot;Title\&quot;}},{\&quot;id\&quot;:$IMAGE_IDS,\&quot;required\&quot;:1,\&quot;img\&quot;:{\&quot;url\&quot;:\&quot;https://creatives.smaato.com/creatives/native/1456230556037.png\&quot;}},{\&quot;id\&quot;:$IMAGE_IDS,\&quot;required\&quot;:1,\&quot;img\&quot;:{\&quot;url\&quot;:\&quot;https://creatives.smaato.com/creatives/native/1456230556037.png\&quot;}},{\&quot;id\&quot;:$DATA_IDS,\&quot;required\&quot;:1,\&quot;data\&quot;:{\&quot;value\&quot;:\&quot;Description\&quot;}},{\&quot;id\&quot;:$DATA_IDS,\&quot;required\&quot;:1,\&quot;data\&quot;:{\&quot;value\&quot;:\&quot;CTAText.\&quot;}}],\&quot;imptrackers\&quot;:[\&quot;http://tracker.net/tracking/beacon1\&quot;,\&quot;http://tracker.net/tracking/beacon2\&quot;,\&quot;http://tracker.net/tracking/beacon3\&quot;]}}&quot;,
+          &quot;adomain&quot;: [
+            &quot;example.com&quot;
+          ],
+          &quot;crid&quot;: &quot;native-crid&quot;,
+          &quot;cid&quot;: &quot;native-cid&quot;,
+          &quot;iurl&quot;: &quot;http://us-east-user.demo.net/image.png&quot;,
+          &quot;burl&quot;: &quot;http://us-east-user.demo.net/bill_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;p=${AUCTION_PRICE}&amp;aid=&quot;,
+          &quot;lurl&quot;: &quot;http://us-east-user.demo.net/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+          &quot;nurl&quot;: &quot;http://us-east-user.demo.net/win_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;p=${AUCTION_PRICE}&amp;aid=&quot;
+        }
+      ]
+    }
+  ]
+}&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">NATIVE_1_2</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;id&quot;:&quot;5a514203-b7a9-48d0-ad2e-4da05bf0c735&quot;,
+  &quot;bidid&quot;:&quot;5d7801c2be564c8100f00011&quot;,
+  &quot;seatbid&quot;:[
+     {
+        &quot;bid&quot;:[
+           {
+              &quot;id&quot;:&quot;5d7801c2be564c8100f00011-1062015&quot;,
+              &quot;price&quot;:2.0,
+              &quot;impid&quot;:&quot;1&quot;,
+              &quot;nurl&quot;:&quot;http://node-p2e-gie4ah.sitescout.com/smaato/win/aid:5d7801c2be564c8100f00011;c:${AUCTION_PRICE};s:;cid:1062015;ts:1568145858061;d:MzMzMTUwMi1uYXRpdmU&quot;,
+              &quot;adm&quot;:&quot;{\&quot;native\&quot;:{\&quot;link\&quot;:{\&quot;url\&quot;:\&quot;http://clickserv.sitescout.com/clk/8cc00d7733a331ba/88e42568017fb609/0-0/0///~_aid_~5d7801c2be564c8100f00011//cidentLy8vLy8\&quot;,\&quot;clicktrackers\&quot;:[\&quot;https://adrta.com/c?clid=ss&amp;paid=ss&amp;cb=1568145858061&amp;avid=112053&amp;caid=1062015&amp;publisherId=1100043642&amp;kv5=&amp;plid=3331502&amp;segment=&amp;kv4=100.10.38.5&amp;kv14=&amp;kv1=native&amp;siteId=120207704&amp;kv7=17&amp;kv15=UNKNOWN&amp;kv16=&amp;kv17=&amp;kv18=com.particlenews.newsbreak&amp;kv24=MOBILE_APP&amp;kv20=&amp;kv21=eb6fe99843ff5310bd0cd40d267826fff05d8aa3&amp;kv22=9863a35c-c598-4c80-b091-d7adf379bb26&amp;kv11=5d7801c2be564c8100f00011&amp;kv3=&amp;kv2=\&quot;]},\&quot;ver\&quot;:\&quot;1.2\&quot;,\&quot;assets\&quot;:[{\&quot;id\&quot;:5,\&quot;required\&quot;:1,\&quot;data\&quot;:{\&quot;type\&quot;:2,\&quot;value\&quot;:\&quot;Lose 3 to 5 pounds per week. Keep it off with free support for life!\&quot;}},{\&quot;id\&quot;:2,\&quot;required\&quot;:1,\&quot;img\&quot;:{\&quot;type\&quot;:3,\&quot;url\&quot;:\&quot;http://cdn01.basis.net/112100/112053/uhSvl5gEElOXwX0T.jpg\&quot;,\&quot;w\&quot;:1200,\&quot;h\&quot;:627}},{\&quot;id\&quot;:1,\&quot;required\&quot;:1,\&quot;title\&quot;:{\&quot;text\&quot;:\&quot;Lose Weight For Life!\&quot;}},{\&quot;id\&quot;:6,\&quot;required\&quot;:1,\&quot;data\&quot;:{\&quot;type\&quot;:12,\&quot;value\&quot;:\&quot;Learn more\&quot;}},{\&quot;id\&quot;:3,\&quot;required\&quot;:1,\&quot;img\&quot;:{\&quot;type\&quot;:1,\&quot;url\&quot;:\&quot;http://cdn01.basis.net/112100/112053/5MkC88n4Mc8MdPa4.jpg\&quot;,\&quot;w\&quot;:240,\&quot;h\&quot;:240}}],\&quot;imptrackers\&quot;:[\&quot;https://node-p2e-gie4ah.sitescout.com/smaato/px/aid:5d7801c2be564c8100f00011;c:${AUCTION_PRICE};s:;cid:1062015;ts:1568145858061\&quot;,\&quot;https://pixel-sync.sitescout.com/dmp/pixelSync?nid=17&amp;wb=1&amp;hdid=0&amp;id=9863a35c-c598-4c80-b091-d7adf379bb26&amp;idType=4\&quot;,\&quot;https://ad.doubleclick.net/ddm/trackimp/N428001.3027484BASISDSP/B22322261.248240382;dc_trk_aid=447774364;dc_trk_cid=119057854;u=210363%7C5d7801c2be564c8100f00011%7C%7Ccom.particlenews.newsbreak%7CAWAKEN002CP+%5BCPA%5D+GT+%28Zips%2B15+mi%29_Display%7CMOBILE_APP%7C1062015;ord=[timestamp];dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=?\&quot;],\&quot;jstracker\&quot;:\&quot;\&quot;}}&quot;,
+              &quot;adomain&quot;:[
+                 &quot;awaken180weightloss.com&quot;
+              ],
+              &quot;iurl&quot;:&quot;http://preview.sitescout.ad/preview?adOnly=1&amp;amp;ad=8cc00d7733a331ba&quot;,
+              &quot;crid&quot;:&quot;3331502&quot;,
+              &quot;cid&quot;:&quot;1062015&quot;,
+              &quot;attr&quot;:[
+
+              ],
+              &quot;cat&quot;:[
+                 &quot;IAB7-44&quot;,
+                 &quot;IAB7&quot;
+              ]
+           }
+        ],
+        &quot;seat&quot;:&quot;18878&quot;
+     }
+  ],
+  &quot;cur&quot;:&quot;USD&quot;
+}&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PREFERRED_DEAL</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;id&quot;: &quot;openDealTwoBids&quot;,
+  &quot;seatbid&quot;: [
+    {
+      &quot;bid&quot;: [
+        {
+          &quot;id&quot;: &quot;firstBidWithDealId&quot;,
+          &quot;impid&quot;: &quot;1&quot;,
+          &quot;price&quot;: 10.0,
+          &quot;burl&quot;:&quot;http://us-east-user.demo.net/bill_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;amp;p=${AUCTION_PRICE}&amp;amp;aid=&quot;,
+          &quot;lurl&quot;:&quot;http://us-east-user.demo.net/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+          &quot;nurl&quot;: &quot;http://ajkfkjd.net/winnotice/win&quot;,
+          &quot;adm&quot;: &quot;&amp;lt;ad xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xsi:noNamespaceSchemaLocation=\&quot;smaato_ad_v0.9.xsd\&quot; modelVersion=\&quot;0.9\&quot;&gt;&amp;lt;imageAd&gt;&amp;lt;imgUrl&gt;http://ajkfkjd.net/images/image.png&amp;lt;/imgUrl&gt;&amp;lt;clickUrl&gt;http://ajkfkjd.net/click&amp;lt;/clickUrl&gt;&amp;lt;width&gt;320&amp;lt;/width&gt;&amp;lt;height&gt;50&amp;lt;/height&gt;&amp;lt;/imageAd&gt;&amp;lt;/ad&gt;&quot;,
+          &quot;adomain&quot;: [
+            &quot;example.com&quot;
+          ],
+          &quot;iurl&quot;: &quot;http://ajkfkjd.net/images/image.png&quot;,
+          &quot;cid&quot;: &quot;11111111111&quot;,
+          &quot;crid&quot;: &quot;222222222&quot;,
+          &quot;dealid&quot;: &quot;deal-id-with-bid&quot;
+        }
+      ]
+    },
+    {
+      &quot;bid&quot;: [
+        {
+          &quot;id&quot;: &quot;secondBidWithoutDealId&quot;,
+          &quot;impid&quot;: &quot;1&quot;,
+          &quot;price&quot;: 10.0,
+          &quot;burl&quot;:&quot;http://us-east-user.demo.net/bill_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;amp;p=${AUCTION_PRICE}&amp;amp;aid=&quot;,
+          &quot;lurl&quot;:&quot;http://us-east-user.demo.net/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+          &quot;nurl&quot;: &quot;http://ajkfkjd.net/winnotice/win&quot;,
+          &quot;adm&quot;: &quot;&amp;lt;ad xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xsi:noNamespaceSchemaLocation=\&quot;smaato_ad_v0.9.xsd\&quot; modelVersion=\&quot;0.9\&quot;&gt;&amp;lt;imageAd&gt;&amp;lt;imgUrl&gt;http://ajkfkjd.net/images/image.png&amp;lt;/imgUrl&gt;&amp;lt;clickUrl&gt;http://ajkfkjd.net/click&amp;lt;/clickUrl&gt;&amp;lt;width&gt;320&amp;lt;/width&gt;&amp;lt;height&gt;50&amp;lt;/height&gt;&amp;lt;/imageAd&gt;&amp;lt;/ad&gt;&quot;,
+          &quot;adomain&quot;: [
+            &quot;example.com&quot;
+          ],
+          &quot;iurl&quot;: &quot;http://ajkfkjd.net/images/image.png&quot;,
+          &quot;cid&quot;: &quot;11111111111&quot;,
+          &quot;crid&quot;: &quot;222222222&quot;
+        }
+      ]
+    }
+  ]
+}&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">PRIVATE_EXCHANGE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;id&quot;: &quot;dspForPX&quot;,
+  &quot;seatbid&quot;: [
+    {
+      &quot;bid&quot;: [
+        {
+          &quot;id&quot;: &quot;dspForPX&quot;,
+          &quot;impid&quot;: &quot;1&quot;,
+          &quot;price&quot;: 99.0,
+          &quot;adid&quot;: &quot;534365&quot;,
+          &quot;burl&quot;:&quot;http://us-east-user.demo.net/bill_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;amp;p=${AUCTION_PRICE}&amp;amp;aid=&quot;,
+          &quot;lurl&quot;:&quot;http://us-east-user.demo.net/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+          &quot;nurl&quot;: &quot;http://ajkfkjd.net/winnotice/win?dspForPX&quot;,
+          &quot;adm&quot;: &quot;&amp;lt;ad xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xsi:noNamespaceSchemaLocation=\&quot;smaato_ad_v0.9.xsd\&quot; modelVersion=\&quot;0.9\&quot;&gt;&amp;lt;imageAd&gt;&amp;lt;imgUrl&gt;http://ajkfkjd.net/images/image.png&amp;lt;/imgUrl&gt;&amp;lt;clickUrl&gt;http://ajkfkjd.net/click&amp;lt;/clickUrl&gt;&amp;lt;width&gt;320&amp;lt;/width&gt;&amp;lt;height&gt;50&amp;lt;/height&gt;&amp;lt;/imageAd&gt;&amp;lt;/ad&gt;&quot;,
+          &quot;adomain&quot;: [
+            &quot;example.com&quot;
+          ],
+          &quot;iurl&quot;: &quot;http://ajkfkjd.net/images/image.png?dspForPX&quot;,
+          &quot;cid&quot;: &quot;435435435&quot;,
+          &quot;crid&quot;: &quot;435435&quot;,
+          &quot;attr&quot;: [
+          ],
+          &quot;dealid&quot;: &quot;83fafb25-09d2-4ace-812a-70c260cdf70c&quot;
+        }
+      ],
+      &quot;seat&quot;: &quot;seat1&quot;,
+      &quot;group&quot;: 0
+    }
+  ],
+  &quot;bidid&quot;: &quot;dspForPX_bidid&quot;,
+  &quot;cur&quot;: &quot;USD&quot;
+}&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">RICH_MEDIA</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;cur&quot;:&quot;USD&quot;,
+  &quot;seatbid&quot;:[{
+    &quot;seat&quot;:&quot;16&quot;,
+    &quot;bid&quot;:[{
+      &quot;price&quot;:1.1,
+      &quot;id&quot;:&quot;16-2e8e019a-2451-4f00-a84e-0e4c4c36c0e6-1&quot;,
+      &quot;impid&quot;:&quot;1&quot;,
+      &quot;nurl&quot;:&quot;http://us-east-user.demo.net/win_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;amp;p=${AUCTION_PRICE}&amp;amp;aid=&quot;,
+      &quot;burl&quot;:&quot;http://us-east-user.demo.net/bill_notice/smaato_bid?rid=2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug&amp;amp;p=${AUCTION_PRICE}&amp;amp;aid=&quot;,
+      &quot;lurl&quot;:&quot;http://us-east-user.demo.net/bidloss?lossreason=${AUCTION_LOSS}&quot;,
+      &quot;cid&quot;:&quot;3538598&quot;,
+      &quot;iurl&quot;:&quot;http://bid.g.doubleclick.net/xbbe/creativefetch?p=APEucNUUi4brC8Kg06zUjH7LDKx7Ci82QFgAYmQ5siKRKVtLW7upJxs&quot;,
+      &quot;adomain&quot;:[&quot;example.com&quot;],
+      &quot;adid&quot;:&quot;16_12096914&quot;,
+      &quot;adm&quot;:&quot;&amp;lt;?xml version=\&quot;1.0\&quot; encoding=\&quot;ISO-8859-1\&quot;?&gt; &amp;lt;ad xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; xsi:noNamespaceSchemaLocation=\&quot;http://standards.smaato.com/ad/smaato_ad_v0.9.xsd\&quot; modelVersion=\&quot;0.9\&quot;&gt; &amp;lt;richmediaAd&gt; &amp;lt;content&gt; &amp;lt;![CDATA[ &amp;lt;SCRIPT language=\&quot;JavaScript1.1\&quot; SRC=\&quot;http://bid.g.doubleclick.net/xbbe/creative/adj?d=APEucNXA2G-JzINdXHGxjGolvpNa3yygpqz7ciHL6FuVTgAVv45EgYEAdDrbQ08wOQXFhZugcx2U910Q20yPMBnULDJEyla5FL48O-rh9C4poXieh_iZYykTpAHl71KBPaYgYpdfzJvnLELjpf1sXmdmPIOeWZ-a5UxOJH9NLpuj54OVdgkOpeN48Uf9V-eAkikM1PcDJWBL4bPTle7qkohIFHwqUOJlxnQ_UbZ9ra1fmUObEVSJH6W3uJ3rqYOvd-cE1DXxOvWUEqfy-bsn-8gLPVEuLE01_xx2WRkAFqbhfk-UJCnJmLgrTFUioamTyBW40su1x2Ej4id3y-R-RWvmpHPbxRblWUwtXZ8M7uWF8-PNE4e_FPRj3zyGhlAWX-taN8CqOyV_\&quot;&gt; &amp;lt;/SCRIPT&gt; &lt;NOSCRIPT&gt; &lt;A HREF=\&quot;http://bid.g.doubleclick.net/xbbe/creative/jump?d=APEucNXA2G-JzINdXHGxjGolvpNa3yygpqz7ciHL6FuVTgAVv45EgYEAdDrbQ08wOQXFhZugcx2U910Q20yPMBnULDJEyla5FL48O-rh9C4poXieh_iZYykTpAHl71KBPaYgYpdfzJvnLELjpf1sXmdmPIOeWZ-a5UxOJH9NLpuj54OVdgkOpeN48Uf9V-eAkikM1PcDJWBL4bPTle7qkohIFHwqUOJlxnQ_UbZ9ra1fmUObEVSJH6W3uJ3rqYOvd-cE1DXxOvWUEqfy-bsn-8gLPVEuLE01_xx2WRkAFqbhfk-UJCnJmLgrTFUioamTyBW40su1x2Ej4id3y-R-RWvmpHPbxRblWUwtXZ8M7uWF8-PNE4e_FPRj3zyGhlAWX-taN8CqOyV_\&quot;&gt; &lt;IMG SRC=\&quot;http://bid.g.doubleclick.net/xbbe/creative/ad?d=APEucNXA2G-JzINdXHGxjGolvpNa3yygpqz7ciHL6FuVTgAVv45EgYEAdDrbQ08wOQXFhZugcx2U910Q20yPMBnULDJEyla5FL48O-rh9C4poXieh_iZYykTpAHl71KBPaYgYpdfzJvnLELjpf1sXmdmPIOeWZ-a5UxOJH9NLpuj54OVdgkOpeN48Uf9V-eAkikM1PcDJWBL4bPTle7qkohIFHwqUOJlxnQ_UbZ9ra1fmUObEVSJH6W3uJ3rqYOvd-cE1DXxOvWUEqfy-bsn-8gLPVEuLE01_xx2WRkAFqbhfk-UJCnJmLgrTFUioamTyBW40su1x2Ej4id3y-R-RWvmpHPbxRblWUwtXZ8M7uWF8-PNE4e_FPRj3zyGhlAWX-taN8CqOyV_\&quot; BORDER=0 WIDTH=320 HEIGHT=50 ALT=\&quot;Advertisement\&quot;&gt; &lt;/A&gt; &amp;lt;/NOSCRIPT&gt; &lt;script type=\&quot;text/javascript\&quot;&gt; if (&#39;&#39;) { document.write(&#39;&lt;script src=\&quot;http://c.betrad.com/surly.js?;ad_w=320;ad_h=50;coid=322;nid=4311;cps=\&quot;&gt;&lt;/sc&#39; + &#39;ript&gt;&#39;); } &lt;/script&gt; &amp;lt;iframe src=\&quot;http://googleads.g.doubleclick.net/xbbe/pixel?d=CLD6GhDf6SMYkqviBQ&amp;amp;v=APEucNVZLac_dGJ6w0zYTxCVWQAcQdpH4PuzoyT9C6HRzn7VaL-k0kVZIasKbtViVirKrS6mrgFNjly9fPhWmN4ssIUvKL9Knb7G5QDCVDHTIp1K8pXjpkk\&quot; style=\&quot;display:none\&quot;&gt; &amp;lt;/iframe&gt; &lt;img width=&#39;1&#39; height=&#39;1&#39; style=&#39;border:0&#39; src=&#39;http://bs.serving-sys.com/BurstingPipe/adServer.bs?cn=tf&amp;c=19&amp;mc=imp&amp;pli=14500879&amp;PluID=0&amp;ord=%%CACHEBUSTER%%&amp;rtu=-1&#39;/&gt;\n\n &amp;lt;img width=&#39;1&#39; height=&#39;1&#39; style=&#39;border:0&#39; src=&#39;http://ad.atdmt.com/i/img;p=11212200958561;idfa=;idfa_lat=;aaid=;aaid_lat=;cache=&#39;/&gt; &lt;DIV STYLE=\&quot;position: absolute; left: 0px; top: 0px; visibility: hidden;\&quot;&gt; &lt;IMG SRC=\&quot;http://bid.g.doubleclick.net/xbbe/beacon?data=APEucNUS4EoEQm9Q3Ene-RM9D9f6DGvm1LE3P42bBjZZ1rOxT6a882v3yjhJwD-L10E0weODQwyVjNWIXyVHvZ9wPVBjPbmTOw\&quot; BORDER=0 WIDTH=1 HEIGHT=1 ALT=\&quot;\&quot; STYLE=\&quot;display:none\&quot;&gt; &lt;/DIV&gt; &amp;lt;img src=\&quot;http://us-east-user.bidswitch.net/imp/${AUCTION_PRICE}/http%3A%2F%2Fbid.g.doubleclick.net%2Fxbbe%2Fview%3Fd%3DAPEucNU1IiZ7L6GpDGC7w-mLx5Epkf_VI1_4ziSsfbZNIL8xTyR2KNtMkPiBLEKqOKVAScR4lhH16FzEjI3cdvwJaPHCGq7xG9h695wqBLmiI8jB221fmVrC8X9OdbfblqACvT5vlbPltKUezCL2QZ-C6ZNUiG_zpkkb6iae7omUA5trMWnKPtPHsKxIHzJ55Fjtnt4FR2pGniq4EiBDjhkYFG1byRdCZxta_YcFhdPxGrnUso36KNdyZrRfBOLMdflTJv78ioUT%26pr%3D%24%7BAUCTION_PRICE%7D/2G2J5QmI7JIKuEoeOyv-Fob7-MI19Iwm6q7tBiURHo8KCBFQ1tLBZTZHYH66VyIYN5amxUtCifKIY_l6IzDfJmiku4ukesiP5GdMtQ-0WRWnbtImXV7MWGTRUV23mQhIN9n8lAe_GfyhvwBOYX3ZcQEG8rlKkdBMM9iWRmAW25QjbJ6p6uS6KpTkujKcXqDXeDn76blEVDMdsOtyAd8871FPeN8MHxWK4bSKHy8uwN5P_LEMJL87i3yBG4UaZnxm--KUTpdLGo_ZqNmIQclot1VbuTcWZu9Z_wlDpq62FmP6vKHOs5o73onK9xlhP8IWiM_jEZGozvP7EHQiA0wpZ9jDKyEwUkLGkj_XyMkGqTjhjyeskjEbP5RAFojdXNp4EfuiVt6q-ToRHZ_Pjsq3HOurWfmZl2TVig7JAOVpYBt-sV8Nwiw67oxN3R1rQfhsHvhMBcFapqiAu0sOlNmMyJjwCAThPYX2eii3xy9MUe6KXUJSAcxj6xPFHM-TIm9KHKhFrilqpk6E2-8GLBIGoVMbKojd74bf9i5qIG14HJEb99zoHxG5rh_nXJ4DytgftwphiiKRmqSkpEIxsCjj0mGfeOXVWDBNpHF2GJ738XF9DTSE33IUkfYD7Ug/\&quot; alt=\&quot; \&quot; style=\&quot;display:none\&quot;/&gt; ]]&gt; &amp;lt;/content&gt; &amp;lt;width&gt;320&amp;lt;/width&gt; &amp;lt;height&gt;50&amp;lt;/height&gt; &amp;lt;/richmediaAd&gt; &amp;lt;/ad&gt;&quot;
+      }]
+  }],
+  &quot;id&quot;:&quot;BqzFJc1Ze7&quot;
+}&quot;#</span>;
+
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">MISSING_BID</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">r#&quot;{
+  &quot;cur&quot;:&quot;USD&quot;,
+  &quot;seatbid&quot;:[{
+    &quot;seat&quot;:&quot;16&quot;
+  }],
+  &quot;id&quot;:&quot;BqzFJc1Ze7&quot;
+}&quot;#</span>;
+</code></pre></div>
+</section><section id="search" class="content hidden"></section></div></main><div id="rustdoc-vars" data-root-path="../../" data-current-crate="rtb_contract" data-themes="ayu,dark,light" data-resource-suffix="" data-rustdoc-version="1.61.0 (fe5b13d68 2022-05-18)" ></div>
+</body></html>
