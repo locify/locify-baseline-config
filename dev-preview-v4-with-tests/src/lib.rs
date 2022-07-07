@@ -6,7 +6,8 @@ mod player;
 
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LazyOption, UnorderedMap, Vector};
-use near_sdk::{AccountId, Balance, bs58, env, near_bindgen, PanicOnDefault, serde_json, Timestamp};
+use near_sdk::{AccountId, Balance, bs58, env, near_bindgen, PanicOnDefault, Promise, serde_json, Timestamp};
+use near_sdk::json_types::U128;
 use crate::auction::Auction;
 use crate::dto::bid_request::BidRequest;
 use crate::dto::bid_response::BidResponse;
@@ -23,13 +24,14 @@ const AUCTION_PERIOD: Timestamp = 5_000;
 /// A RTB Smart contract being is represented here
 /// start documents
 pub struct Contract {
-    /// contract owner AccountId
+    /// contract owner
     pub owner_id: AccountId,
-    /// set last history auction state
-    pub last_auction_state: Option<Auction>,
-    /// current active auctions
+    /// set history for last auction state<br>
+    /// for all history use [near-lake-indexer](https://github.com/near/near-lake-indexer)
+    pub last_auction_state: Option<Vector<Auction>>,
+    /// store active auctions
     pub current_auctions: UnorderedMap<AuctionId, Auction>,
-    /// players store
+    /// store players
     pub players: UnorderedMap<PlayerId, Player>,
 }
 
@@ -46,23 +48,54 @@ impl Contract {
         }
     }
 
-    /// start auction
+    // TODO: how to start auction automatically or approve every time
+    /// start auction<br>only publisher can start auction
     pub fn start_auction(&mut self, bid_req: String) {
-        let bid_request: BidRequest = serde_json::from_str(bid_req.as_str()).unwrap();
-        let auction_id = bs58::encode(env::sha256(&env::random_seed())).into_string();
+        // check only publisher can start auction
+        if self.players.keys().contains(env::predecessor_account_id().to_string()) {
+            let bid_request: BidRequest = serde_json::from_str(bid_req.as_str()).unwrap();
+            let auction_id = bs58::encode(env::sha256(&env::random_seed())).into_string();
 
-        let bid_responses: UnorderedMap<Player, BidResponse> = UnorderedMap::new(b"br".to_vec());
-        self.current_auctions.insert(&auction_id.clone(), &Auction {
-            auction_id,
-            winner: None,
-            sell_price: 0,
-            highest_bid: 0,
-            description: "".to_string(),
-            start_at: env::block_timestamp_ms(),
-            end_at: env::block_timestamp_ms() + AUCTION_PERIOD,
-            bid_request,
-            bid_responses,
-        });
+            let bid_responses: UnorderedMap<PlayerId, BidResponse> = UnorderedMap::new(b"br".to_vec());
+            self.current_auctions.insert(&auction_id.clone(), &Auction {
+                auction_id,
+                winner: None,
+                sell_price: 0,
+                highest_bid: 0,
+                description: "".to_string(),
+                start_at: env::block_timestamp_ms(),
+                end_at: env::block_timestamp_ms() + AUCTION_PERIOD,
+                bid_request,
+                bid_responses,
+            });
+        }
+    }
+
+    /// check auction state
+    pub fn check_auction_state(&self) -> Vec<Auction> {
+        let current_time = env::block_timestamp_ms();
+        let finish_auction: Vec<Auction> = self.current_auctions.values()
+            .filter(|x| x.end_at <= current_time)
+            .collect();
+        let mut auctions: Vec<Auction> = vec![];
+        for auction in finish_auction {
+            let mut winner: Option<PlayerId> = None;
+            let max_bid = 0;
+            for player in auction.bid_responses.keys() {
+                if let Some(bid) = auction.bid_responses.get(&player) {
+                    // check fist bid only if we get same price
+                    if bid.bid_ads > max_bid {
+                        winner = Some(player);
+                    }
+                }
+            }
+            // set last auction state
+            let mut auction = auction.clone();
+            auction.winner = winner;
+            auction.highest_bid = max_bid;
+            auctions.push(auction);
+        }
+        auctions
     }
 
     /// add player
@@ -72,8 +105,9 @@ impl Contract {
         self.players.insert(&player.id, &player);
         player.id
     }
+
+    /// set player state Active, (default state - Disabled) <br> only administrator can change player state
     pub fn player_activate(&mut self, player_id: PlayerId) -> String {
-        // only administrator can change player state
         if self.owner_id == env::predecessor_account_id() {
             if let Some(update_player) = self.players.get(&player_id) {
                 self.players.insert(&player_id, &update_player.activate());
@@ -82,6 +116,8 @@ impl Contract {
         }
         r#"{"status":"failure"}"#.to_string()
     }
+
+    /// set player state Disabled, (default state - Disabled) <br> only administrator can change player state
     pub fn player_disable(&mut self, player_id: PlayerId) -> String {
         // only administrator can change player state
         if self.owner_id == env::predecessor_account_id() {
@@ -93,10 +129,15 @@ impl Contract {
         r#"{"status":"failure"}"#.to_string()
     }
 
+    // TODO make pagination for all players
+    // TODO who can check info about all players
+    /// get all players info
     pub fn get_players(&self) -> Vec<Player> {
         self.players.values().collect()
     }
 
+    // TODO who can check info about player
+    /// get all players info
     pub fn get_player(&self, player_id: PlayerId) -> Option<Player> {
         if let Some(player) = self.players.get(&player_id) {
             return Some(player);
@@ -104,6 +145,7 @@ impl Contract {
         None
     }
 
+    /// add deposit by player
     pub fn add_deposit(&mut self, player_id: PlayerId, balance: Balance) -> Option<Balance> {
         if let Some(update_player) = self.players.get(&player_id) {
             // update deposit first
@@ -116,20 +158,23 @@ impl Contract {
         }
         None
     }
-    pub fn withdrawal_deposit(&mut self, player_id: PlayerId, balance: Balance) -> Option<Balance> {
+
+    // TODO add error description
+    /// withdrawal deposit by player
+    pub fn withdrawal_deposit(&mut self, player_id: PlayerId, amount: U128) -> Option<Promise> {
         if player_id == env::predecessor_account_id().as_str() {
             if let Some(update_player) = self.players.get(&player_id) {
                 if update_player.status != PlayerStatus::Disabled
-                    && update_player.balance - balance > 0 {
-                    self.players.insert(&player_id, &update_player.withdrawal_balance(balance));
-                } else {
-                    return None;
+                    && update_player.balance - amount.0 > 0 {
+                    Promise::new(update_player.linked_account.clone()).transfer(amount.0);
+                    self.players.insert(&player_id, &update_player.withdrawal_balance(amount.0));
                 }
             }
         }
         None
     }
-    // get all players deposit
+
+    /// get all players deposit<br>only administrator can view
     pub fn get_deposit(&self) -> Option<Balance> {
         // only administrator can view deposit
         if self.owner_id == env::predecessor_account_id() {

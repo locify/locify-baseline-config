@@ -13,5 +13,7 @@ pub struct BidResponse {
     pub curr: String,
     pub customdata: Option<String>,
     pub nbr: Option<i32>,
+    // TODO: implement standard, only for testing
+    pub bid_ads: u128,
     //pub ext: LazyOption<serde_json::Value>,
 }
