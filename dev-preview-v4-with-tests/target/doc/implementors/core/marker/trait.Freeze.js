@@ -1,3 +1,0 @@
-(function() {var implementors = {};
-implementors["rtb_contract"] = [{"text":"impl Freeze for <a class=\"struct\" href=\"rtb_contract/struct.Contract.html\" title=\"struct rtb_contract::Contract\">Contract</a>","synthetic":true,"types":["rtb_contract::Contract"]},{"text":"impl Freeze for <a class=\"struct\" href=\"rtb_contract/struct.ContractExt.html\" title=\"struct rtb_contract::ContractExt\">ContractExt</a>","synthetic":true,"types":["rtb_contract::ContractExt"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

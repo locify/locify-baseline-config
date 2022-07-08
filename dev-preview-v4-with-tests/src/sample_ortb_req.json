@@ -1,0 +1,40 @@
+{
+  "id": "5881455945172700775",
+  "source": {
+    "fd": 0,
+    "sourcetype": 2,
+    "tid": ""
+  },
+  "imp": [
+    {
+      "secure": 1,
+      "bidfloor": 0.01,
+      "bidfloorcur": "USD",
+      "banner": {
+        "format": [
+          {
+            "h": 400,
+            "w": 240
+          }
+        ]
+      },
+      "id": "55",
+      "ext": {
+        "unmoderated": 0
+      },
+      "tagid": "215876-55",
+      "instl": 0
+    }
+  ],
+  "site": {
+    "page": "https://banners.adfox.ru/201208/adfox/1300062/2b9df8c5d7bd3400f1c1702953801bc8_index.html",
+    "domain": "example.com",
+    "publisher": {
+      "id": "944028"
+    },
+    "id": "215876",
+    "content": {
+      "language": "us"
+    }
+  }
+}

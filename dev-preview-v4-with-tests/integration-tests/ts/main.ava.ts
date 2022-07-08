@@ -24,10 +24,6 @@ test.beforeEach(async (t) => {
         "./res/rtb_contract.wasm",
         {initialBalance: NEAR.parse("30 N").toJSON()}
     );
-    await contract.call(contract, 'new', {
-        owner_id: root,
-    });
-
     // some test accounts
     const alice = await root.createSubAccount("alice", {
         initialBalance: NEAR.parse("30 N").toJSON(),
@@ -35,6 +31,11 @@ test.beforeEach(async (t) => {
     const bob = await root.createSubAccount("bob", {
         initialBalance: NEAR.parse("30 N").toJSON(),
     });
+
+    await contract.call(contract, 'new', {
+        owner_id: alice,
+    });
+
 
     // Save state for test runs, it is unique for each test
     t.context.worker = worker;
@@ -65,7 +66,8 @@ test("activate player", async (t) => {
         account_id: "alice.testnet",
         "player_type": "Publisher"
     });
-    await root.call(contract, "player_activate", {player_id: playerId});
+    let result: string = await root.call(contract, "player_activate", {player_id: playerId});
+    console.log(`player id: ${playerId}, activate result: ${result}`);
     const playerState: Player = await contract.view("get_player", {player_id: playerId});
     t.is('Active', playerState.status);
 });
