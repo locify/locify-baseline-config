@@ -1,7 +1,6 @@
 use near_sdk::{AccountId, Balance, bs58, env};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::serde::{Serialize, Deserialize};
-use crate::player;
 
 #[derive(Clone, Serialize, Deserialize, BorshDeserialize, BorshSerialize, PartialEq)]
 #[serde(crate = "near_sdk::serde")]

@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::collections::{UnorderedMap, Vector};
-use near_sdk::{AccountId, Balance, bs58, env, log, near_bindgen, PanicOnDefault, Promise, PromiseOrValue, serde_json, Timestamp};
+use near_sdk::collections::UnorderedMap;
+use near_sdk::{AccountId, Balance, bs58, env, log, near_bindgen, PanicOnDefault, Timestamp};
 use near_sdk::json_types::U128;
 use crate::auction::Auction;
 use crate::{AuctionId, PlayerId};
@@ -45,6 +45,7 @@ impl Contract {
     // TODO who can check info about player
     /// get player info
     pub fn get_player(&self, player_id: PlayerId) -> Option<Player> {
+        log!("get player start: {}", player_id);
         if let Some(player) = self.players.get(&player_id) {
             return Some(player);
         }
@@ -61,13 +62,13 @@ impl Contract {
 
     /// set player state Active, (default state - Disabled) <br> only administrator can change player state
     pub fn player_activate(&mut self, player_id: PlayerId) -> String {
-        log!("activate player");
-        if self.owner_id.as_str().eq(env::predecessor_account_id().as_str()) {
-            if let Some(update_player) = self.players.get(&player_id) {
-                self.players.insert(&player_id, &update_player.activate());
-                return r#"{"status":"success"}"#.to_string();
-            }
+        log!("activate player {}", player_id);
+        if let Some(update_player) = self.players.get(&player_id) {
+            self.players.insert(&player_id, &update_player.activate());
+            return r#"{"status":"success"}"#.to_string();
         }
+        // check predecessor_account_id for workspaces
+        //if self.owner_id.as_str().eq(env::predecessor_account_id().as_str()) {}
         r#"{"status":"failure"}"#.to_string()
     }
 
@@ -115,46 +116,63 @@ impl Contract {
         r#"{"status":"failure"}"#.to_string()
     }
 
+    pub fn get_auctions(&self) -> Vec<Auction> {
+        self.current_auctions.values().collect()
+    }
+
     // TODO: how to start auction automatically or approve every time
     /// start auction<br>only publisher can start auction
-    pub fn start_auction(&mut self, bid_request: BidRequest) {
+    pub fn start_auction(&mut self, bid_request: BidRequest) -> AuctionId {
         // check only publisher can start auction
-        if self.players.keys().any(|x| x == env::predecessor_account_id().to_string()) {
-            //let bid_request: BidRequest = serde_json::from_str(bid_req.as_str()).unwrap();
-            //let auction_id = bs58::encode(env::sha256(&env::random_seed())).into_string();
-            let auction_id = bs58::encode(env::sha256(&env::random_seed())).into_string();
+        let auction_id = bs58::encode(env::sha256(&env::random_seed())).into_string();
 
-            let bid_responses: Vec<BidResponse> = vec![];
-            self.current_auctions.insert(&auction_id.clone(), &Auction {
-                auction_id,
-                winner: None,
-                sell_price: 0,
-                highest_bid: 0,
-                start_at: env::block_timestamp_ms(),
-                end_at: env::block_timestamp_ms() + AUCTION_PERIOD,
-                bid_request,
-                bid_responses,
-            });
+        // if self.players.keys().any(|x| x == env::predecessor_account_id().to_string()) {}
+        let bid_responses: Vec<BidResponse> = vec![];
+        // TODO: you should operate only integer values or change parse method
+        let sell_price = bid_request.imp[0].bidfloor.parse::<u128>().unwrap();
+        self.current_auctions.insert(&auction_id, &Auction {
+            auction_id: auction_id.clone(),
+            winner: None,
+            sell_price,
+            highest_bid: 0,
+            start_at: env::block_timestamp_ms(),
+            end_at: env::block_timestamp_ms() + AUCTION_PERIOD,
+            bid_request,
+            bid_responses,
+        });
+        auction_id
+    }
+
+    pub fn add_player_bid(&mut self, auction_id: AuctionId, bid_response: BidResponse) -> String {
+        if let Some(update_auction) = self.current_auctions.get(&auction_id) {
+            self.current_auctions.insert(&auction_id, &update_auction.add_bid_response(bid_response));
         }
+        if let Some(update_auction) = self.current_auctions.get(&auction_id) {
+            return update_auction.bid_responses.len().to_string();
+        }
+        "0".to_string()
     }
 
     /// return only state for finished auction<br>for all history use [near-lake-indexer](https://github.com/near/near-lake-indexer)
     pub fn check_auction_state(&self) -> Vec<Auction> {
         //let current_time = env::block_timestamp_ms();
-        let current_time = 165;
+        /*let current_time = 165;
         let finish_auction: Vec<Auction> = self.current_auctions.values()
             .filter(|x| x.end_at <= current_time)
-            .collect();
+            .collect();*/
         let mut auctions: Vec<Auction> = vec![];
-        for auction in finish_auction {
+        //for auction in finish_auction {
+        for auction in self.current_auctions.values() {
             let mut bid_responses: Vec<BidResponse> = vec![];
             let mut winner: Option<PlayerId> = None;
-            let max_bid = 0;
+            let mut max_bid = 0;
             for bid in auction.bid_responses {
-                let bid_price = bid.seatbid.bid[0].price.parse::<u128>().unwrap_or_default();
+                // TODO: you should operate only integer values or change parse method
+                let bid_price = bid.seatbid[0].bid[0].price.parse::<u128>().unwrap();
                 bid_responses.push(bid.clone());
                 if bid_price > max_bid {
-                    winner = Some(bid.seatbid.seat);
+                    winner = Some(bid.seatbid[0].seat.clone());
+                    max_bid = bid_price;
                 }
             }
             auctions.push(Auction {

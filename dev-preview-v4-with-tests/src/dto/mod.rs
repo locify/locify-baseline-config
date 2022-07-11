@@ -6,3 +6,5 @@ pub mod imp;
 pub mod site;
 pub mod source;
 pub mod seat_bid;
+pub mod format;
+pub mod content;

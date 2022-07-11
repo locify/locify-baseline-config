@@ -7,8 +7,8 @@ use crate::dto::source::Source;
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct BidRequest {
-    id: String,
-    source: Source,
-    imp: Vec<Imp>,
-    site: Site,
+    pub id: String,
+    pub source: Source,
+    pub imp: Vec<Imp>,
+    pub site: Site,
 }

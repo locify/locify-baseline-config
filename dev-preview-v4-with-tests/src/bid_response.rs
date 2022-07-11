@@ -7,5 +7,5 @@ use crate::dto::seat_bid::SeatBid;
 pub struct BidResponse {
     pub id: String,
     pub cur: String,
-    pub seatbid: SeatBid,
+    pub seatbid: Vec<SeatBid>,
 }

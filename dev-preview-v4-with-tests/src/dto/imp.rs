@@ -6,12 +6,12 @@ use crate::dto::ext::Ext;
 #[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Imp {
-    id: String,
-    tagid: String,
-    instl: String,
-    secure: String,
-    bidfloor: String,
-    bidfloorcur: String,
-    banner: Banner,
-    ext: Ext,
+    pub id: String,
+    pub tagid: String,
+    pub instl: String,
+    pub secure: String,
+    pub bidfloor: String,
+    pub bidfloorcur: String,
+    pub banner: Banner,
+    pub ext: Ext,
 }

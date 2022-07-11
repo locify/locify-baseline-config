@@ -1,6 +1,5 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::{PanicOnDefault, Timestamp};
-use near_sdk::collections::{Vector};
 use near_sdk::serde::{Serialize, Deserialize};
 use crate::{AuctionId, PlayerId};
 use crate::bid_request::BidRequest;
@@ -17,4 +16,11 @@ pub struct Auction {
     pub(crate) end_at: Timestamp,
     pub(crate) bid_request: BidRequest,
     pub(crate) bid_responses: Vec<BidResponse>,
+}
+
+impl Auction {
+    pub(crate) fn add_bid_response(mut self, bid_response: BidResponse) -> Auction {
+        self.bid_responses.push(bid_response);
+        self
+    }
 }
