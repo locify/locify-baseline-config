@@ -16,7 +16,7 @@ export const createSubAccount = async (rootAccount: Account, config: ConnectConf
     const keyPair = utils.KeyPair.fromRandom('ed25519');
     await keyStore.setKey(config.networkId, subAccountId, keyPair);
     //console.log(`pkey: ${keyPair.getPublicKey().toString()}`);
-    console.log(`subAccountId: ${subAccountId}`);
+    //console.log(`subAccountId: ${subAccountId}`);
     await rootAccount.createAccount(
         subAccountId,
         keyPair.getPublicKey().toString(),

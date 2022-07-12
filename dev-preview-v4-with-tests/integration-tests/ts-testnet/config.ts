@@ -35,7 +35,7 @@ export const generateUniqueString = (prefix: string): string => {
 
 export const methodOptions = (account: Account): MethodOptions => ({
     viewMethods: ['get_player', 'get_players'], // view methods do not change state but usually return a value
-    changeMethods: ['new', 'player_add', 'player_activate', 'get_auctions', 'get_auction', 'start_auction', 'check_auction_state', 'add_player_bid'], // change methods modify state
+    changeMethods: ['new', 'player_add', 'player_activate', 'add_deposit', 'get_auctions', 'get_auction', 'start_auction', 'check_auction_state', 'add_player_bid'], // change methods modify state
     sender: account, // account object to initialize and sign transactions.
 })
 

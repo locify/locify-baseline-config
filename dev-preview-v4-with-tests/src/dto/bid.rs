@@ -6,6 +6,7 @@ use near_sdk::serde::{Serialize, Deserialize};
 pub struct Bid {
     pub id: String,
     pub impid: String,
+    // bid price
     pub price: String,
     pub adid: String,
     pub cid: String,

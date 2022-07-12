@@ -32,6 +32,8 @@ pub struct Player {
     pub(crate) status: PlayerStatus,
     /// Player balance
     pub(crate) balance: Balance,
+    /// Player balance under stakes
+    pub(crate) stakes: Balance,
 }
 
 impl Player {
@@ -42,6 +44,7 @@ impl Player {
             player_type,
             status: PlayerStatus::Disabled,
             balance: 0,
+            stakes: 0,
         }
     }
     pub(crate) fn activate(mut self) -> Player {
@@ -60,6 +63,13 @@ impl Player {
         assert!(self.balance - balance > 0);
         assert!(self.status != PlayerStatus::Disabled);
         self.balance -= balance;
+        self
+    }
+    pub(crate) fn is_enough_balance(&self, amount: Balance) -> bool {
+        self.balance > self.stakes + amount
+    }
+    pub(crate) fn add_stake(mut self, amount: Balance) -> Player {
+        self.stakes += amount;
         self
     }
 }

@@ -17,14 +17,18 @@ test.beforeEach('contract config test', async (t) => {
     const root: Account = await createRootAccount(config, generateUniqueString('dev'));
     const rootContract: any = await deployAndInitContract(root, methodOptions(root));
 
-    const alice: Account = await createSubAccount(root, config, generateUniqueString('dev'))
+    const [alice, bob, dave] = await Promise.all<Account>([
+        ...Array.from({length: 3}, () => generateUniqueString('dev'))
+            .map(async (uniqId) =>
+                await createSubAccount(root, config, uniqId)
+            )]);
+
     const aliceContract: any = await loadContractForSubAccount(alice, root.accountId, methodOptions(alice));
 
-    const bob: Account = await createSubAccount(root, config, generateUniqueString('dev'))
     const bobContract: any = await loadContractForSubAccount(alice, root.accountId, methodOptions(bob));
 
-    const dave: Account = await createSubAccount(root, config, generateUniqueString('dev'))
     const daveContract: any = await loadContractForSubAccount(alice, root.accountId, methodOptions(bob));
+
 
     t.context.accounts = {root, alice, bob, dave}
     t.context.contracts = {rootContract, aliceContract, bobContract, daveContract}

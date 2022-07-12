@@ -1,5 +1,13 @@
 {
   "ts-node": {
     "maxOldSpaceSize": 32784
+  },
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "es5",
+      "scripthost",
+      "es2015.promise"
+    ]
   }
 }

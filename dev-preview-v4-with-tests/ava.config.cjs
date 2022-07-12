@@ -6,8 +6,5 @@ module.exports = {
     failWithoutAssertions: false,
     extensions: ["ts"],
     require: ["ts-node/register"],
-    environmentVariables: {
-        NODE_OPTIONS: '--max-old-space-size=4096',
-    },
     verbose: true,
 };

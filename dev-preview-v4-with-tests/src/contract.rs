@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::UnorderedMap;
-use near_sdk::{AccountId, Balance, bs58, env, log, near_bindgen, PanicOnDefault, Timestamp};
+use near_sdk::{AccountId, Balance, bs58, env, log, near_bindgen, PanicOnDefault, Promise, Timestamp};
 use near_sdk::json_types::U128;
 use crate::auction::Auction;
 use crate::{AuctionId, PlayerId};
@@ -8,7 +8,7 @@ use crate::bid_request::BidRequest;
 use crate::bid_response::BidResponse;
 use crate::player::{Player, PlayerStatus, PlayerType};
 
-const AUCTION_PERIOD: Timestamp = 5_000;
+const AUCTION_PERIOD: Timestamp = 1_000;
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
@@ -33,6 +33,19 @@ impl Contract {
             current_auctions: UnorderedMap::new(b"a".to_vec()),
             players: UnorderedMap::new(b"p".to_vec()),
         }
+    }
+
+    pub fn get_accounts_info(&self) -> String {
+        format!("predecessor_account_id: {}, current_account: {}, signer_account_id: {}",
+                // The id of the account that was the previous contract in the chain of cross-contract calls.
+                // If this is the first contract, it is equal to signer_account_id.
+                env::predecessor_account_id(),
+                // The id of the account that owns the current contract.
+                env::current_account_id(),
+                // The id of the account that either signed the original transaction
+                // or issued the initial cross-contract call.
+                env::signer_account_id()
+        )
     }
 
     // TODO make pagination for all players
@@ -85,10 +98,12 @@ impl Contract {
     }
 
     /// add deposit by player
-    pub fn add_deposit(&mut self, player_id: PlayerId, balance: Balance) -> Option<Balance> {
+    #[payable]
+    pub fn add_deposit(&mut self, player_id: PlayerId) -> Option<Balance> {
+        let attached_deposit = env::attached_deposit();
         if let Some(update_player) = self.players.get(&player_id) {
             // update deposit first
-            self.players.insert(&player_id, &update_player.add_balance(balance));
+            self.players.insert(&player_id, &update_player.add_balance(attached_deposit));
             // check deposit update
             if let Some(player) = self.players.get(&player_id) {
                 return Some(player.balance);
@@ -98,22 +113,18 @@ impl Contract {
         None
     }
 
-    #[payable]
     // TODO add error description
     /// withdrawal deposit by player
-    pub fn withdrawal_deposit(&mut self, player_id: PlayerId, amount: U128) -> String {
-        if player_id == env::predecessor_account_id().as_str() {
-            if let Some(update_player) = self.players.get(&player_id) {
-                if update_player.status != PlayerStatus::Disabled
-                    && update_player.balance - amount.0 > 0 {
-                    //Promise::new(update_player.linked_account.clone()).transfer(amount.0);
-                    self.players.insert(&player_id, &update_player.withdrawal_balance(amount.0));
-                    return r#"{"status":"success"}"#.to_string();
-                }
+    pub fn withdrawal_deposit(&mut self, player_id: PlayerId, amount: U128) {
+        let amount = amount.into();
+        if let Some(update_player) = self.players.get(&player_id) {
+            if update_player.status != PlayerStatus::Disabled
+                && update_player.balance - amount > 0 {
+                let linked_account = update_player.linked_account.clone();
+                self.players.insert(&player_id, &update_player.withdrawal_balance(amount));
+                Promise::new(linked_account).transfer(amount);
             }
         }
-        // PromiseOrValue::Value(r#"{"status":"failure"}"#.to_string())
-        r#"{"status":"failure"}"#.to_string()
     }
 
     pub fn get_auctions(&self) -> Vec<Auction> {
@@ -129,62 +140,46 @@ impl Contract {
         // if self.players.keys().any(|x| x == env::predecessor_account_id().to_string()) {}
         let bid_responses: Vec<BidResponse> = vec![];
         // TODO: you should operate only integer values or change parse method
-        let sell_price = bid_request.imp[0].bidfloor.parse::<u128>().unwrap();
         self.current_auctions.insert(&auction_id, &Auction {
             auction_id: auction_id.clone(),
             winner: None,
-            sell_price,
             highest_bid: 0,
             start_at: env::block_timestamp_ms(),
             end_at: env::block_timestamp_ms() + AUCTION_PERIOD,
             bid_request,
             bid_responses,
+            deposits: 0,
         });
         auction_id
     }
 
-    pub fn add_player_bid(&mut self, auction_id: AuctionId, bid_response: BidResponse) -> String {
+    pub fn add_player_bid(&mut self, auction_id: AuctionId, bid_response: BidResponse) {
         if let Some(update_auction) = self.current_auctions.get(&auction_id) {
-            self.current_auctions.insert(&auction_id, &update_auction.add_bid_response(bid_response));
+            let player_id = bid_response.seatbid[0].seat.clone();
+            // TODO bid only integer value
+            let bid = bid_response.seatbid[0].bid[0].price.parse::<u128>().unwrap();
+            // check player existing
+            if let Some(update_player) = self.players.get(&player_id) {
+                // check player balance
+                if update_player.is_enough_balance(bid) {
+                    // update player state/stakes
+                    self.players.insert(&player_id, &update_player.add_stake(bid));
+                    // update auction state
+                    self.current_auctions.insert(&auction_id, &update_auction.add_bid_response(bid_response));
+                }
+            }
         }
-        if let Some(update_auction) = self.current_auctions.get(&auction_id) {
-            return update_auction.bid_responses.len().to_string();
-        }
-        "0".to_string()
     }
 
     /// return only state for finished auction<br>for all history use [near-lake-indexer](https://github.com/near/near-lake-indexer)
     pub fn check_auction_state(&self) -> Vec<Auction> {
-        //let current_time = env::block_timestamp_ms();
-        /*let current_time = 165;
+        let current_time = env::block_timestamp_ms();
         let finish_auction: Vec<Auction> = self.current_auctions.values()
             .filter(|x| x.end_at <= current_time)
-            .collect();*/
+            .collect();
         let mut auctions: Vec<Auction> = vec![];
-        //for auction in finish_auction {
-        for auction in self.current_auctions.values() {
-            let mut bid_responses: Vec<BidResponse> = vec![];
-            let mut winner: Option<PlayerId> = None;
-            let mut max_bid = 0;
-            for bid in auction.bid_responses {
-                // TODO: you should operate only integer values or change parse method
-                let bid_price = bid.seatbid[0].bid[0].price.parse::<u128>().unwrap();
-                bid_responses.push(bid.clone());
-                if bid_price > max_bid {
-                    winner = Some(bid.seatbid[0].seat.clone());
-                    max_bid = bid_price;
-                }
-            }
-            auctions.push(Auction {
-                auction_id: auction.auction_id,
-                winner,
-                sell_price: auction.sell_price,
-                highest_bid: max_bid,
-                start_at: auction.start_at,
-                end_at: auction.end_at,
-                bid_request: auction.bid_request,
-                bid_responses,
-            });
+        for auction in finish_auction {
+            auctions.push(auction.set_winner());
         }
         auctions
     }
