@@ -13,7 +13,11 @@
     "test:integration": "npm run test:integration:rs && npm run test:integration:ts-workspaces",
     "test:integration:rs": "npm run build && npm run postbuild && cd integration-tests/rs && cargo run --example integration-tests",
     "test:integration:ts-workspaces": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-workspaces/main.ava.ts",
-    "test:integration:ts-testnet": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-testnet/main.ava.ts"
+    "test:integration:ts-testnet": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-testnet/main.ava.ts",
+    "test:ts-workspaces-with-build": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-testnet/main.ava.ts",
+    "test:ts-testnet": "npm run build && npm run postbuild && yarn run ts-node-dev integration-tests/ts-testnet/main-test.ts",
+    "test:ts-sandbox": "npm run build && npm run postbuild && yarn run ts-node-dev integration-tests/ts-workspaces/main-test.ts",
+    "test:restart-sandbox": "rm -rf /tmp/near-sandbox/ && near-sandbox --home /tmp/near-sandbox init && near-sandbox --home /tmp/near-sandbox run"
   },
   "dependencies": {
     "big.js": "^6.2.0",

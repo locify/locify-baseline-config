@@ -1,12 +1,12 @@
-import {createRootAccount, deployAndInitContract} from "./rootAccount";
+import {createRootAccount, deployAndInitContract} from "../ts-shares/rootAccount";
 
 import anyTest, {TestFn} from "ava";
 import {Account} from "near-api-js";
 import {config, generateUniqueString, methodOptions} from "./config";
-import {createSubAccount, loadContractForSubAccount} from "./subAccount";
+import {createSubAccountSandbox, loadContractForSubAccount} from "../ts-shares/subAccount";
 import {getBidRequest} from "../ts-shares/bidRequest";
 import {getBidResponse} from "../ts-shares/bidResponse";
-import {Auction, Player} from "../ts-shares/types";
+import {Auction, Player} from "../ts-shares/share";
 
 const test = anyTest as TestFn<{
     accounts: Record<string, Account>
@@ -20,7 +20,7 @@ test.beforeEach('contract config test', async (t) => {
     const [alice, bob, dave] = await Promise.all<Account>([
         ...Array.from({length: 3}, () => generateUniqueString('dev'))
             .map(async (uniqId) =>
-                await createSubAccount(root, config, uniqId)
+                await createSubAccountSandbox(root, config, uniqId)
             )]);
 
     const aliceContract: any = await loadContractForSubAccount(alice, root.accountId, methodOptions(alice));

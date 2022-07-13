@@ -4,10 +4,10 @@ var assert = require('assert');
 import {Account} from "near-api-js";
 import {getBidRequest} from "../ts-shares/bidRequest";
 import {getBidResponse} from "../ts-shares/bidResponse";
-import {Auction} from "../ts-shares/types";
-import {createRootAccount, deployAndInitContract} from "./rootAccount";
-import {config, generateUniqueString, methodOptions} from "./config";
-import {createSubAccount, loadContractForSubAccount} from "./subAccount";
+import {Auction, generateUniqueString} from "../ts-shares/share";
+import {createRootAccount, deployAndInitContract} from "../ts-shares/rootAccount";
+import {config, methodOptions} from "./config";
+import {createSubAccount, createSubAccountSandbox, loadContractForSubAccount} from "../ts-shares/subAccount";
 
 async function test() {
     const root: Account = await createRootAccount(config, generateUniqueString('dev'));
@@ -18,14 +18,13 @@ async function test() {
             .map(async (uniqId) =>
                 await createSubAccount(root, config, uniqId)
             )]);
-    console.log(alice.accountId, bob.accountId, dave.accountId);
+    console.log(`accounts: ${root.accountId}, ${alice.accountId}, ${bob.accountId}, ${dave.accountId}`);
 
     // connect account to contract
-    const rootContract: any = await deployAndInitContract(root, methodOptions(root));
-    const [aliceContract, bobContract, daveContract] = await Promise.all<any>([
-        [alice, bob, dave].map(async (account: Account) =>
-            await loadContractForSubAccount(account, root.accountId, methodOptions(account)))
-    ])
+    const rootContract: any = await deployAndInitContract(root);
+
+    const [aliceContract, bobContract, daveContract] = [alice, bob, dave].map(account =>
+        loadContractForSubAccount(account, root.accountId))
 
     // add publishers
     const davePlayerId: string = await daveContract.player_add({
@@ -34,20 +33,23 @@ async function test() {
             player_type: 'Publisher'
         }
     });
-    // add advertisers
-    const [alicePlayerId, bobPlayerId] = await Promise.all<any>([
-        [aliceContract, bobContract].map(async (contract: any) =>
+
+    const [alicePlayerId, bobPlayerId] = await Promise.all<string>([
+        ...Array.from([aliceContract, bobContract]).map(async (contract: any) =>
             await contract.player_add({
                 args: {
-                    account_id: alice.accountId,
+                    account_id: contract.account.accountId,
                     player_type: 'Advertiser'
                 }
             })
         )
     ]);
 
+    console.log(`publisher: dave ${davePlayerId}`)
+    console.log(`advertisers: alice ${alicePlayerId} bob: ${bobPlayerId}`)
+
     // activate players
-    await Promise.all<any>([
+    await Promise.all([
         [alicePlayerId, bobPlayerId, davePlayerId].map(async (playerId) =>
             await rootContract.player_activate({
                 args: {
@@ -57,23 +59,32 @@ async function test() {
         )
     ]);
 
-    const aliceDep = await aliceContract.add_deposit({
+    console.log(`start add deposit`)
+    const aliceDepo = await aliceContract.add_deposit({
         args: {
             player_id: alicePlayerId
         },
-        gas: NEAR.parse("3N"),
-        attachedDeposit: NEAR.parse('1N')
+        amount: 9
     })
-    console.log(`aliceDep: ${aliceDep}`)
+    console.log(`aliceDepo: ${aliceDepo}`)
 
+    const bobDepo = await bobContract.add_deposit({
+        args: {
+            player_id: bobPlayerId
+        },
+        amount: 8
+    })
+
+    console.log(`bodDepo: ${aliceDepo}`)
     // start auctions
-    /*const bidfloor = 1;
+    const bidfloor = 1;
     const auctionId: string = await daveContract.start_auction({
         args: {
             bid_request: getBidRequest('123', davePlayerId, bidfloor.toString(), "240", "400")
         }
     });
 
+    console.log(`start bid`)
     const aliceBid = 5;
     await aliceContract.add_player_bid({
         args: {
@@ -90,8 +101,15 @@ async function test() {
         }
     });
 
+    console.log(`get auctions state`)
     const auctionCount: Array<Auction> = await rootContract.get_auctions({args: {}});
-    const auctionResult: Array<Auction> = await rootContract.check_auction_state({args: {}});*/
+
+    console.log(`wait 4 seconds`)
+    const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    await wait(4000);
+
+    console.log(`finish auctions`)
+    const auctionResult: Array<Auction> = await rootContract.check_auction_state({args: {}});
 }
 
 test()
