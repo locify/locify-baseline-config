@@ -1,0 +1,45 @@
+@import "../styles/font";
+// Color
+$color-white: #fff;
+$color-red: #ff0000;
+$color-black: #000000;
+$primary-color: #0047AB;
+$secondary-color: #255389;
+
+$margin-base: 16px;
+$padding-base: 8px;
+
+// Font size
+$font-size-extra-small: 10px;
+$font-size-smaller: 12px;
+$font-size-small: 14px;
+$font-size-base: 16px;
+$font-size-medium: 18px;
+$font-size-large: 22px;
+$font-size-large-secondary: 30px;
+$font-size-larger: 40px;
+
+// Line height
+$line-height-extra-small: 12px;
+$line-height-smaller: 16px;
+$line-height-base: 22px;
+$line-height-medium: 25px;
+$line-height-large: 30px;
+$line-height-larger: 46px;
+
+// Font family
+$font-family-default: "Open Sans", sans-serif;
+$font-family: "Helvetica Neue LT Std", $font-family-default;
+
+// Font weight
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 900;
+$font-weight-light: 100;
+
+// Breakpoint
+$breakpoint--sm: 576px;
+$breakpoint--md: 768px;
+$breakpoint--lg: 992px;
+$breakpoint--xl: 1200px;
+$breakpoint--xxl: 1600px;

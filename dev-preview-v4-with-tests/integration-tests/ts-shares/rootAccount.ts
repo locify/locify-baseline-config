@@ -1,13 +1,7 @@
-import {generateUniqueString} from "./share";
+import {generateUniqueString, methodOptions, wasmPath} from "./config";
 
 const nearApi = require('near-api-js')
 const fs = require("fs");
-import {
-    config,
-    INITIAL_BALANCE, MethodOptions,
-    RANDOM_ACCOUNT_LENGTH,
-    wasmPath
-} from "../ts-testnet/config";
 
 const {connect, keyStores, utils, Contract} = nearApi;
 import {Near, Account, ConnectConfig} from "near-api-js";
@@ -39,7 +33,7 @@ export const createRootAccount = async (config: ConnectConfig, accountId: string
 }
 
 export const deployAndInitContract = async (rootAccount: Account): Promise<any> => {
-    //console.table(account)
+    console.table(rootAccount)
     // deploy contract
     const result = await rootAccount.deployContract(fs.readFileSync(wasmPath));
     console.log(`deploy contract status`);
@@ -47,13 +41,9 @@ export const deployAndInitContract = async (rootAccount: Account): Promise<any> 
     const rootContract = new Contract(
         rootAccount, // the account object that is connecting
         rootAccount.accountId, // the account object that is connecting
-        {
-            viewMethods: ["get_player", "get_players"], // view methods do not change state but usually return a value
-            changeMethods: ["new", "player_add", "player_activate", "add_deposit", "get_auctions", "get_auction", "start_auction", "check_auction_state", "add_player_bid"], // change methods modify state
-            sender: rootAccount
-        }
+        methodOptions(rootAccount)
     );
-    await rootContract.new(
+    await rootContract.init(
         {
             args: {
                 owner_id: rootAccount.accountId

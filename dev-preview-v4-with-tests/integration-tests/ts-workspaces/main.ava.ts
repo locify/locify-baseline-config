@@ -2,7 +2,7 @@ import {Worker, NEAR, NearAccount} from "near-workspaces";
 import anyTest, {TestFn} from "ava";
 import {getBidRequest} from "../ts-shares/bidRequest";
 import {getBidResponse} from "../ts-shares/bidResponse";
-import {Auction, Player} from "../ts-shares/share";
+import {Auction, Player} from "../ts-shares/config";
 import {config, generateUniqueString} from "../ts-testnet/config";
 
 const test = anyTest as TestFn<{

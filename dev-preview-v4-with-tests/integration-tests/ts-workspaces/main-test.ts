@@ -12,8 +12,7 @@ import {
     deployAndInitContract,
     createMasterAccountSandbox
 } from "../ts-shares/rootAccount";
-import {methodOptions, wasmPath} from "../ts-testnet/config";
-import {generateUniqueString} from "../ts-shares/share";
+import {generateUniqueString} from "../ts-shares/config";
 import {config} from './config';
 import {FunctionCallOptions} from "near-api-js/lib/account";
 

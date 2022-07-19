@@ -15,15 +15,18 @@
     "test:integration:ts-workspaces": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-workspaces/main.ava.ts",
     "test:integration:ts-testnet": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-testnet/main.ava.ts",
     "test:ts-workspaces-with-build": "npm run build && npm run postbuild && ava --verbose integration-tests/ts-testnet/main.ava.ts",
-    "test:ts-testnet": "npm run build && npm run postbuild && yarn run ts-node-dev integration-tests/ts-testnet/main-test.ts",
+    "test:ts-tn": "npm run build && npm run postbuild && yarn run ts-node-dev integration-tests/ts-testnet/main-test.ts",
+    "test:ts-tn-web": "npm run build && npm run postbuild && yarn run ts-node-dev integration-tests/ts-testnet-web/main-test.ts",
     "test:ts-sandbox": "npm run build && npm run postbuild && yarn run ts-node-dev integration-tests/ts-workspaces/main-test.ts",
-    "test:restart-sandbox": "rm -rf /tmp/near-sandbox/ && near-sandbox --home /tmp/near-sandbox init && near-sandbox --home /tmp/near-sandbox run"
+    "test:restart-sandbox": "rm -rf /tmp/near-sandbox/ && near-sandbox --home /tmp/near-sandbox init && near-sandbox --home /tmp/near-sandbox run",
+    "test:add-balance": "yarn run ts-node-dev integration-tests/nearUtils/addBalance.ts alice.liv1.testnet"
   },
   "dependencies": {
     "big.js": "^6.2.0",
     "borsh": "^0.4.0",
     "env-cmd": "^10.1.0",
     "near-api-js": "^0.45.1",
+    "near-seed-phrase": "^0.2.0",
     "pretty-print-json": "^1.2.5"
   },
   "devDependencies": {

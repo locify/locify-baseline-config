@@ -3,7 +3,7 @@ use near_sdk::serde::{Serialize, Deserialize};
 use crate::dto::content::Content;
 use crate::dto::publisher::Publisher;
 
-#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Site {
     pub id: String,

@@ -3,7 +3,7 @@ use near_sdk::serde::{Serialize, Deserialize};
 use crate::dto::banner::Banner;
 use crate::dto::ext::Ext;
 
-#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct Imp {
     pub id: String,

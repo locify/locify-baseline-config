@@ -6,7 +6,7 @@ import {config, generateUniqueString, methodOptions} from "./config";
 import {createSubAccountSandbox, loadContractForSubAccount} from "../ts-shares/subAccount";
 import {getBidRequest} from "../ts-shares/bidRequest";
 import {getBidResponse} from "../ts-shares/bidResponse";
-import {Auction, Player} from "../ts-shares/share";
+import {Auction, Player} from "../ts-shares/config";
 
 const test = anyTest as TestFn<{
     accounts: Record<string, Account>

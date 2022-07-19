@@ -1,6 +1,6 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::UnorderedMap;
-use near_sdk::{AccountId, Balance, bs58, env, log, near_bindgen, PanicOnDefault, Promise, Timestamp};
+use near_sdk::{AccountId, assert_self, Balance, bs58, env, log, near_bindgen, PanicOnDefault, Promise, Timestamp};
 use near_sdk::json_types::U128;
 use crate::auction::Auction;
 use crate::bid_request::BidRequest;
@@ -16,7 +16,7 @@ mod bid_response;
 type AuctionId = String;
 type PlayerId = String;
 
-const AUCTION_PERIOD: Timestamp = 1_000;
+const AUCTION_PERIOD: Timestamp = 180_000; // 180 - 3 min
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
@@ -35,7 +35,10 @@ pub struct Contract {
 impl Contract {
     /// initialization RTB smart contract
     #[init]
-    pub fn new(owner_id: AccountId) -> Self {
+    pub fn init(owner_id: AccountId) -> Self {
+        // Assert that predecessor_account_id == current_account_id,
+        // meaning contract called itself.
+        assert_self();
         Self {
             owner_id,
             current_auctions: UnorderedMap::new(b"a".to_vec()),
@@ -43,7 +46,8 @@ impl Contract {
         }
     }
 
-    pub fn get_accounts_info(&self) -> String {
+    // TODO: check with change methods
+    pub fn view_accounts_info(&self) -> String {
         format!("predecessor_account_id: {}, current_account: {}, signer_account_id: {}",
                 // The id of the account that was the previous contract in the chain of cross-contract calls.
                 // If this is the first contract, it is equal to signer_account_id.
@@ -56,20 +60,40 @@ impl Contract {
         )
     }
 
+    /// clear all players
+    pub fn clear_players(&mut self) { self.players.clear(); }
+
     // TODO make pagination for all players
     // TODO who can check info about all players
     /// get all players info
-    pub fn get_players(&self) -> Vec<Player> {
+    pub fn view_players(&self) -> Vec<Player> {
         self.players.values().collect()
     }
 
     // TODO who can check info about player
-    /// get player info
-    pub fn get_player(&self, player_id: PlayerId) -> Option<Player> {
+    /// get player info by player_id
+    pub fn view_player_by_id(&self, player_id: PlayerId) -> Option<Player> {
         log!("get player start: {}", player_id);
         if let Some(player) = self.players.get(&player_id) {
             return Some(player);
         }
+        None
+    }
+
+    /// view player info by account_id
+    pub fn view_player_by_account(&self, account_id: AccountId) -> Option<Player> {
+        if self.players.is_empty() {
+            log!("players vector is empty");
+            return None;
+        }
+        let players: Vec<Player> = self.players.values()
+            .filter(|player| player.linked_account == account_id)
+            .collect();
+
+        if players.len() == 1 {
+            return Some(players[0].clone());
+        }
+        log!("error get player by account: {} len: {}", account_id, players.len());
         None
     }
 
@@ -111,6 +135,7 @@ impl Contract {
         let attached_deposit = env::attached_deposit();
         if let Some(update_player) = self.players.get(&player_id) {
             // update deposit first
+            Promise::new(env::current_account_id()).transfer(attached_deposit);
             self.players.insert(&player_id, &update_player.add_balance(attached_deposit));
             // check deposit update
             if let Some(player) = self.players.get(&player_id) {
@@ -135,9 +160,24 @@ impl Contract {
         }
     }
 
-    pub fn get_auctions(&self) -> Vec<Auction> {
+    /// view all auctions state
+    pub fn view_auctions(&self) -> Vec<Auction> {
         self.current_auctions.values().collect()
     }
+
+    /// view all auctions state
+    pub fn view_auction_by_id(&self, auction_id: AuctionId) -> Option<Auction> {
+        if self.current_auctions.is_empty() {
+            log!("auctions is empty");
+            return None;
+        }
+        if let Some(auction) = self.current_auctions.get(&auction_id) {
+            return Some(auction);
+        }
+        None
+    }
+    // change all auctions state - clear
+    pub fn clear_auctions(&mut self) { self.current_auctions.clear() }
 
     // TODO: how to start auction automatically or approve every time
     /// start auction<br>only publisher can start auction
@@ -150,7 +190,7 @@ impl Contract {
         // TODO: you should operate only integer values or change parse method
         self.current_auctions.insert(&auction_id, &Auction {
             auction_id: auction_id.clone(),
-            winner: None,
+            winner: "?".to_string(),
             highest_bid: 0,
             start_at: env::block_timestamp_ms(),
             end_at: env::block_timestamp_ms() + AUCTION_PERIOD,

@@ -1,12 +1,17 @@
-import {NEAR, NearAccount} from "near-workspaces";
+const assert = require('assert');
 
-var assert = require('assert');
 import {Account} from "near-api-js";
 import {getBidRequest} from "../ts-shares/bidRequest";
 import {getBidResponse} from "../ts-shares/bidResponse";
-import {Auction, generateUniqueString} from "../ts-shares/share";
+import {
+    Auction,
+    generateUniqueString,
+    INITIAL_TRANSFER5,
+    INITIAL_TRANSFER7,
+    Player
+} from "../ts-shares/config";
 import {createRootAccount, deployAndInitContract} from "../ts-shares/rootAccount";
-import {config, methodOptions} from "./config";
+import {config} from "./config";
 import {createSubAccount, createSubAccountSandbox, loadContractForSubAccount} from "../ts-shares/subAccount";
 
 async function test() {
@@ -27,9 +32,42 @@ async function test() {
         loadContractForSubAccount(account, root.accountId))
 
     // add publishers
-    const davePlayerId: string = await daveContract.player_add({
+    let davePlayerId: string = await daveContract.player_add({
         args: {
-            account_id: bob.accountId,
+            account_id: dave.accountId,
+            player_type: 'Publisher'
+        }
+    });
+
+    const allPlayers: Array<Player> = await rootContract.view_players();
+    assert.notEqual(allPlayers.length, 0, 'players should not to be empty');
+    //console.log(`allPlayers: ${JSON.stringify(allPlayers, null, '\t')}`);
+
+    // TODO: check with change method
+    /*const allAccounts: Array<Player> = await rootContract.view_accounts_info();
+    console.log(`root allPlayers: ${allAccounts}`);*/
+
+    const davePlayerInfo: Player = await daveContract.view_player_by_account({
+        account_id: dave.accountId
+    });
+    assert.notEqual(davePlayerInfo, null, 'dave player should not to be empty');
+    //console.log(`davePlayerInfo by account: ${JSON.stringify(davePlayerInfo, null, '\t')}`);
+
+    console.log(`clear all players`);
+    await rootContract.clear_players({
+        args: {}
+    });
+
+    const davePlayerInfoEmpty: Player | null = await daveContract.view_player_by_account({
+        account_id: dave.accountId
+    });
+    assert.equal(davePlayerInfoEmpty, null, 'dave player should not exists');
+
+    ///********************* continue testing **********************************************
+    // add publishers
+    davePlayerId = await daveContract.player_add({
+        args: {
+            account_id: dave.accountId,
             player_type: 'Publisher'
         }
     });
@@ -64,7 +102,7 @@ async function test() {
         args: {
             player_id: alicePlayerId
         },
-        amount: 9
+        amount: INITIAL_TRANSFER5
     })
     console.log(`aliceDepo: ${aliceDepo}`)
 
@@ -72,7 +110,7 @@ async function test() {
         args: {
             player_id: bobPlayerId
         },
-        amount: 8
+        amount: INITIAL_TRANSFER7
     })
 
     console.log(`bodDepo: ${aliceDepo}`)
@@ -102,7 +140,7 @@ async function test() {
     });
 
     console.log(`get auctions state`)
-    const auctionCount: Array<Auction> = await rootContract.get_auctions({args: {}});
+    const auctionCount: Array<Auction> = await rootContract.view_auctions({args: {}});
 
     console.log(`wait 4 seconds`)
     const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

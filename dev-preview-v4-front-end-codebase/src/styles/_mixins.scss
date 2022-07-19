@@ -1,0 +1,48 @@
+@mixin flex-layout($direction, $justify-content, $align-items) {
+    display: flex;
+    flex-direction: $direction;
+    align-items: $align-items;
+    justify-content: $justify-content;
+}
+
+@mixin font-size($font-size, $line-height: normal, $letter-spacing: normal) {
+    font-size: $font-size * 1px;
+    @if $line-height==normal {
+        line-height: normal;
+    }
+    @else {
+        line-height: $line-height / $font-size;
+    }
+    @if $letter-spacing==normal {
+        letter-spacing: normal;
+    }
+    @else {
+        letter-spacing: #{$letter-spacing / $font-size};
+    }
+}
+
+@mixin screen-from-sm {
+    @media screen and (min-width: $breakpoint--sm) {
+        @content;
+    }
+}
+@mixin screen-only-sm {
+    @media screen and (max-width: $breakpoint--sm) {
+        @content;
+    }
+}
+@mixin screen-from-md {
+    @media screen and (min-width: $breakpoint--md) {
+        @content;
+    }
+}
+@mixin screen-until-md {
+    @media screen and (max-width: $breakpoint--sm) {
+        @content;
+    }
+}
+@mixin screen-until-lg {
+    @media screen and (max-width: $breakpoint--lg) {
+        @content;
+    }
+}

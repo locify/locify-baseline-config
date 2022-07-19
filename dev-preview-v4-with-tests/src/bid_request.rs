@@ -4,7 +4,7 @@ use crate::dto::imp::Imp;
 use crate::dto::site::Site;
 use crate::dto::source::Source;
 
-#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize)]
+#[derive(Debug, Serialize, Deserialize, BorshDeserialize, BorshSerialize, Clone)]
 #[serde(crate = "near_sdk::serde")]
 pub struct BidRequest {
     pub id: String,

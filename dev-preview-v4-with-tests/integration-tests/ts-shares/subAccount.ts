@@ -1,3 +1,5 @@
+import {methodOptions} from "./config";
+
 const nearApi = require('near-api-js')
 const fs = require("fs");
 import {Near, Account, ConnectConfig} from "near-api-js";
@@ -38,14 +40,11 @@ export const createSubAccount = async (rootAccount: Account, config: ConnectConf
 }
 
 export const loadContractForSubAccount = (subAccount: Account, contactId: string): any => {
+
     return new Contract(
         subAccount, // the account object that is connecting
         contactId,
-        {
-            viewMethods: ["get_player", "get_players"], // view methods do not change state but usually return a value
-            changeMethods: ["new", "player_add", "player_activate", "add_deposit", "get_auctions", "get_auction", "start_auction", "check_auction_state", "add_player_bid"], // change methods modify state
-            sender: subAccount
-        }
+        methodOptions(subAccount),
     );
 }
 
