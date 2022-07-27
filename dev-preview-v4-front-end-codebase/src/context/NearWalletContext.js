@@ -3,6 +3,10 @@ import Big from "big.js";
 import {getBidRequest} from "./bidRequest";
 import {getBidResponse} from "./bidResponse";
 
+
+const ROOT_URL = "https://locify.app2u.dev/"
+//const ROOT_URL = "http://localhost:3000/"
+
 var NearWalletStateContext = React.createContext();
 var NearWalletDispatchContext = React.createContext();
 
@@ -10,7 +14,11 @@ function userReducer(state, action) {
     switch (action.type) {
         case "NEAR_LOGIN":
             console.log('login near start')
-            state.wallet.requestSignIn();
+            state.wallet.requestSignIn(state.nearConfig.contractName,
+                "Locify RTB",
+                ROOT_URL + "#/app/account",
+                ROOT_URL + "#/login"
+            );
             return {...state, isLoading: true};
         case "NEAR_LOGOUT":
             console.log('dispatch near_logout');
@@ -22,6 +30,8 @@ function userReducer(state, action) {
             return {...state, isLoading: false};
         case "GET_PLAYER_INFO":
             return {...state};
+        case "SET_PLAYERS":
+            return {...state, players: action.payload}
         case "SET_PLAYER_ID":
             console.log(`set player: ${action.payload}`)
             return {...state, playerInfo: action.payload, isLoading: false}
@@ -37,9 +47,11 @@ function userReducer(state, action) {
             });
             return {...state}
         case "START_AUCTION":
+            console.log(`bid_request: ${getBidRequest(action.payload.auctionId, state.playerInfo.id, action.payload.bidfloor, "240", "400")}`)
             state.contract.start_auction({
                 args: {
-                    bid_request: getBidRequest(action.payload.auctionId, state.playerInfo.id, action.payload.bidfloor, "240", "400")
+                    bid_request: getBidRequest(action.payload.auctionId, state.playerInfo.id, action.payload.bidfloor, "240", "400"),
+                    limited_participate: action.payload.limitedParticipants,
                 }
             })
             return {...state, isLoading: true}
@@ -49,7 +61,7 @@ function userReducer(state, action) {
             state.contract.add_player_bid({
                 args: {
                     auction_id: action.payload.auctionId,
-                    bid_response: getBidResponse(state.playerInfo.id, action.payload.bidPrice, "240", "400")
+                    bid_response: getBidResponse(state.playerInfo.id, action.payload.bidPrice, "240", "400"),
                 }
             })
             return {...state, isLoading: true}
@@ -64,6 +76,7 @@ function NearWalletProvider({contract, currentAccount, nearConfig, wallet, child
         isLoading: false,
         playerInfo: 'not-set',
         auctions: 'not-set',
+        players: 'not-set',
         contract,
         currentAccount,
         nearConfig,
@@ -104,6 +117,7 @@ export {
     getPlayerInfo,
     registerAdvertiser,
     registerPublisher,
+    viewPlayers,
     viewPlayerByAccount,
     addDeposit,
     startAuction,
@@ -151,9 +165,9 @@ function addDeposit(dispatch, amount) {
     dispatch({type: "ADD_DEPOSIT", payload: amount})
 }
 
-function startAuction(dispatch, auctionId, bidfloor) {
-    console.log(`auctionId: ${auctionId}, bidfloor: ${bidfloor}`)
-    dispatch({type: "START_AUCTION", payload: {auctionId, bidfloor}})
+function startAuction(dispatch, auctionId, bidfloor, limitedParticipants) {
+    console.log(`auctionId: ${auctionId}, bidfloor: ${bidfloor} limitedParticipants: ${limitedParticipants}`)
+    dispatch({type: "START_AUCTION", payload: {auctionId, bidfloor, limitedParticipants}})
 
 }
 
@@ -161,9 +175,11 @@ function sendBid(dispatch, auctionId, bidPrice) {
     dispatch({type: "SEND_BID", payload: {auctionId, bidPrice}})
 }
 
-function viewAuctions(dispatch, contract) {
+function viewAuctions(dispatch, contract, player_id) {
     dispatch({type: "SET_LOADING"})
-    contract.view_auctions({})
+    contract.view_auctions({
+        player_id
+    })
         .then((auctions) => {
             if (auctions && auctions.length > 0) {
                 console.log('auctions found')
@@ -172,6 +188,17 @@ function viewAuctions(dispatch, contract) {
             } else {
                 console.log('auctions not found')
                 dispatch({type: "SET_AUCTIONS", payload: 'not-found'})
+            }
+        })
+}
+
+function viewPlayers(dispatch, contract) {
+    dispatch({type: "SET_LOADING"})
+    contract.view_players({})
+        .then((players) => {
+            if (players) {
+                console.log(`players: ${players}`)
+                dispatch({type: "SET_PLAYERS", payload: players})
             }
         })
 }

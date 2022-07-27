@@ -28,6 +28,7 @@ import {Badge, Typography} from "../Wrappers/Wrappers";
 import Notification from "../Notification/Notification";
 import LogoutIcon from '@mui/icons-material/Logout';
 import LoginIcon from '@mui/icons-material/Login';
+import Logo from "./locifyLogo.png"
 
 // context
 import {
@@ -42,7 +43,7 @@ import {
     useNearWalletDispatch,
     useNearWalletState
 } from "../../context/NearWalletContext";
-import {Popover, Stack} from "@mui/material";
+import {Avatar, Box, Popover, Stack} from "@mui/material";
 import {formatNearAmount} from "near-api-js/lib/utils/format";
 
 const messages = [
@@ -157,9 +158,14 @@ export default function Header(props) {
                         />
                     )}
                 </IconButton>
-                <Typography variant="h6" weight="medium" className={classes.logotype}>
-                    LOGO
-                </Typography>
+                <Box
+                    component={'img'}
+                    sx={{
+                        height: 32,
+                    }}
+                    alt={'Locify logo'}
+                    src={Logo}
+                />
                 <div className={classes.grow}/>
                 <IconButton
                     color="inherit"

@@ -38,10 +38,10 @@ export default function Campaign() {
     React.useEffect(() => {
         if (nearWalletState.wallet.isSignedIn()) {
             if (nearWalletState.auctions === 'not-set') {
-                viewAuctions(nearWalletDispatch, nearWalletState.contract)
+                viewAuctions(nearWalletDispatch, nearWalletState.contract, nearWalletState.playerInfo.id)
             }
         }
-    }, [])
+    }, [nearWalletState.playerInfo])
 
     const handleBidFloor = (event) => {
         if (event.target.value.length > 0) {
@@ -146,7 +146,7 @@ export default function Campaign() {
                                     <Button variant={'contained'}
                                             color={'primary'}
                                             disabled={bidFloor === '' || bidFloor === '0'}
-                                            onClick={() => sendBid(nearWalletDispatch, bidAuctionId, bidFloor)}
+                                            onClick={() => sendBid(nearWalletDispatch, bidAuctionId, bidFloor, [])}
                                     >Send bid</Button>
                                 </Stack>
                         )

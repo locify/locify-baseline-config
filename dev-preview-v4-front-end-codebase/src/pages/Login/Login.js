@@ -26,15 +26,21 @@ import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 // styles
 import useStyles from "./styles";
-import {withRouter} from "react-router-dom";
+import {useHistory, withRouter} from "react-router-dom";
 // context
-import {useUserDispatch, loginUser} from "../../context/UserContext";
+import {useUserDispatch, loginUser, loginAsNearUser} from "../../context/UserContext";
+import {loginNearWallet, useNearWalletDispatch, useNearWalletState} from "../../context/NearWalletContext";
+import Logo from "./near_logo.png"
+import {Stack} from "@mui/material";
 
 function Login(props) {
     var classes = useStyles();
 
     // global
     var userDispatch = useUserDispatch();
+
+    var nearWalletState = useNearWalletState();
+    var nearWalletDispatch = useNearWalletDispatch();
 
     // local
     var [isLoading, setIsLoading] = useState(false);
@@ -99,6 +105,8 @@ function Login(props) {
     ];
     const label = {inputProps: {'aria-label': 'Checkbox demo'}};
     const preventDefault = (event) => event.preventDefault();
+
+    const history = useHistory();
 
     return (
         <>
@@ -374,6 +382,57 @@ function Login(props) {
                                 </Button>
                             </DialogActions>
                         </Dialog>
+                        {nearWalletState.wallet.isSignedIn()
+                            ? <Button
+                                variant="contained"
+                                color="default"
+                                size="large"
+                                className={classes.buttonStyle}
+                                onClick={() => {
+                                    loginAsNearUser(
+                                        userDispatch,
+                                        props.history,
+                                        "/app/account",
+                                        setIsLoading,
+                                        setError,
+                                    )
+                                }}
+                            >
+                                <Stack spacing={2} direction={'row'}
+                                       alignItems={'center'}
+                                >
+                                    <Box
+                                        component={'img'}
+                                        sx={{
+                                            height: 32,
+                                        }}
+                                        alt={'Locify logo'}
+                                        src={Logo}
+                                    />
+                                    <Typography>{nearWalletState.currentAccount.accountId}</Typography>
+                                </Stack>
+                            </Button>
+                            : <Button
+                                variant={'contained'}
+                                color="default"
+                                size="large"
+                                className={classes.buttonStyle}
+                                onClick={() => loginNearWallet(nearWalletDispatch)}
+                            >
+                                < Stack spacing={2} direction={'row'}
+                                        alignItems={'center'}
+                                >
+                                    <Box
+                                        component={'img'}
+                                        sx={{
+                                            height: 32,
+                                        }}
+                                        alt={'Locify logo'}
+                                        src={Logo}
+                                    />
+                                    <Typography>Login</Typography>
+                                </Stack>
+                            </Button>}
                         <Button
                             variant="outlined"
                             color="inherit"

@@ -40,7 +40,7 @@ const structure = [
     link: "/app/adunits",
     icon: <FormatListBulletedIcon />,
   },
-  { id: 2, label: "Camapigns", link: "/app/campaigns", icon: <CampaignIcon /> },
+  { id: 2, label: "Campaigns", link: "/app/campaigns", icon: <CampaignIcon /> },
   {
     id: 3,
     label: "Audiences",

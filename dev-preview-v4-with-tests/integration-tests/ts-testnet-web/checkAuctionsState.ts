@@ -2,7 +2,7 @@ import {ConnectConfig, Contract} from "near-api-js";
 import {loadAccounts} from "./loadAccounts";
 import {Auction, formatNear, methodOptions} from "../ts-shares/config";
 
-export async function checkAuctionsState(config: ConnectConfig, contractAccountId: string, homedir: string, keyPathContract: string): Promise<void> {
+export async function checkAuctionsState(config: ConnectConfig, contractAccountId: string, homedir: string, keyPathContract: string, playerId: string): Promise<void> {
     console.log(`start check auctions state`)
     const contractAccount = await loadAccounts(config, contractAccountId, homedir, keyPathContract)
     const contractBalance = await contractAccount.getAccountBalance();
@@ -17,5 +17,8 @@ export async function checkAuctionsState(config: ConnectConfig, contractAccountI
     await contract.check_auction_state({
         args: {}
     })
-    const auctionsEmpty: Array<Auction> = await contract.view_auctions({})
+    const auctions: Array<Auction> = await contract.view_auctions({
+        player_id: playerId
+    })
+    console.log(`auctions: ${JSON.stringify(auctions, null, '\t')}`)
 }

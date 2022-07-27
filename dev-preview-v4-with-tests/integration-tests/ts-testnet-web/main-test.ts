@@ -27,21 +27,21 @@ async function test() {
     const KEY_PATH_ROOT = `/.near-credentials/testnet/${ROOT_ACCOUNT_ID}.json`;
     const KEY_PATH_CONTRACT = `/.near-credentials/testnet/${CONTRACT_ACCOUNT_ID}.json`;
 
-    //await deleteContract(ROOT_ACCOUNT_ID, config, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_CONTRACT)
+    // await deleteContract(ROOT_ACCOUNT_ID, config, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_CONTRACT)
 
-    //const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-    //await wait(5000)
+    // const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    // await wait(5000)
 
 
     // await createContract(config, ROOT_ACCOUNT_ID, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_ROOT, KEY_PATH_CONTRACT)
-    /*let playerId = 'EpNPanXyLK25NZvK8MAiq7paCXWMt7KxHpAedYMXFw6P'
-    await activatePlayer(config, CONTRACT_ACCOUNT_ID, playerId, homedir, KEY_PATH_CONTRACT)
-    playerId = '7g6QDYM654TemRtGiZCYAAKnP28rmuNqE3pzSJZCvLmm'
-    await activatePlayer(config, CONTRACT_ACCOUNT_ID, playerId, homedir, KEY_PATH_CONTRACT)*/
+    //let playerId = 'DaqYikudrqdygRg4Hb2JzHhrrXA5oe3akVVTJj6Gvsxs'
+    //await activatePlayer(config, CONTRACT_ACCOUNT_ID, playerId, homedir, KEY_PATH_CONTRACT)
+    //playerId = 'FxGQYg4mMFiR8SgrV6yEx5bHgxBFaAu3XCJoHRnFQuDR'
+    //await activatePlayer(config, CONTRACT_ACCOUNT_ID, playerId, homedir, KEY_PATH_CONTRACT)
 
-    // await clearAuctions(config, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_CONTRACT)
-    await checkAuctionsState(config, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_CONTRACT)
-
+    const playerId = 'FxGQYg4mMFiR8SgrV6yEx5bHgxBFaAu3XCJoHRnFQuDR'
+    //await clearAuctions(config, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_CONTRACT, playerId)
+    await checkAuctionsState(config, CONTRACT_ACCOUNT_ID, homedir, KEY_PATH_CONTRACT, playerId)
 
 
     ///************************* create subAccounts
